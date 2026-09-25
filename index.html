@@ -1,0 +1,3668 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Prompt Library 2026 — Present</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f7f9; --panel:#ffffff; --ink:#17191b; --muted:#87939a;
+  --pink:#9fc4d5; --pink2:#e5f1f6; --pink3:#f4f9fb; --deep:#5f94aa;
+  --line:#dce8ed; --shadow:0 28px 70px rgba(67,91,102,.13);
+}
+*{box-sizing:border-box}
+button,input,select,textarea{font-family:inherit}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  color:var(--ink); background:
+  radial-gradient(circle at 8% 12%,#fff 0 4%,transparent 4.2%),
+  radial-gradient(circle at 92% 80%,#e5f1f6 0 12%,transparent 12.2%),
+  var(--bg);
+}
+.shell{
+  width:min(1500px,98vw); height:min(900px,96vh);
+  position:absolute; inset:0; margin:auto; background:rgba(255,255,255,.94);
+  border-radius:38px; box-shadow:var(--shadow); border:1px solid #e3edf1;
+  padding:22px 24px 24px; overflow:hidden;
+}
+.topbar{height:54px;display:flex;align-items:flex-start;justify-content:space-between}
+.brand{font-weight:900;letter-spacing:.04em;font-size:19px}
+.brand small{display:block;font-size:10px;letter-spacing:.19em;color:var(--deep);margin-top:3px}
+.nav{display:flex;gap:26px;font-size:13px;font-weight:500;color:#607985;align-items:center;letter-spacing:.04em;text-transform:uppercase}
+.nav span{cursor:pointer;transition:.2s}
+.nav span.active,.nav span:hover{color:var(--deep)}
+.profile{text-align:right;font-size:12px;color:#8b989e;line-height:1.35}
+.profile b{color:var(--ink)}
+.stage-wrap{height:calc(100% - 100px);display:flex;align-items:center;gap:13px}
+.arrow{
+  flex:0 0 46px;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);
+  background:#fff;color:var(--deep);font-size:27px;cursor:pointer;box-shadow:0 8px 22px rgba(67,91,102,.08);
+  transition:.2s;
+}
+.arrow:hover{transform:scale(1.07);background:var(--pink2)}
+.stage{
+  position:relative;flex:1;height:100%;overflow:hidden;border-radius:28px;
+  background:linear-gradient(145deg,#f8fcfe,#fff);
+  border:1px solid var(--line);
+}
+.slide{
+  position:absolute;inset:0;padding:34px 40px;
+  opacity:0;transform:translateX(45px);pointer-events:none;
+  transition:opacity .35s ease,transform .35s ease;
+}
+.slide.active{opacity:1;transform:none;pointer-events:auto}
+.slide.exit-left{opacity:0;transform:translateX(-45px)}
+.kicker{font-size:12px;font-weight:800;letter-spacing:.18em;color:var(--deep);text-transform:uppercase;margin-bottom:13px}
+h1{font-size:clamp(45px,5.4vw,76px);line-height:1;margin:0;letter-spacing:-.055em}
+h2{font-size:clamp(30px,3.2vw,48px);line-height:1.08;margin:0 0 18px;letter-spacing:-.04em}
+p{font-size:17px;line-height:1.65;color:#756d72}
+.accent{color:var(--deep)}
+.sticker{
+  display:inline-block;background:var(--pink2);border:1px solid #f2cbd7;color:var(--deep);
+  padding:8px 13px;border-radius:999px;font-size:12px;font-weight:800;margin-top:22px;
+  transform:rotate(-2deg)
+}
+.doodle{position:absolute;font-size:100px;right:45px;bottom:15px;opacity:.09;transform:rotate(8deg)}
+.hero-note{max-width:650px;margin-top:18px}
+
+/* Anatomy */
+.anatomy{display:grid;grid-template-columns:235px 1fr;gap:25px;height:calc(100% - 82px)}
+.tabs{display:flex;flex-direction:column;gap:10px}
+.tab{
+  text-align:left;border:1px solid var(--line);background:#fff;padding:13px 15px;border-radius:16px;
+  cursor:pointer;font-weight:800;color:#6f676c;transition:.2s;
+}
+.tab small{display:block;font-weight:500;color:#a0969c;margin-top:3px}
+.tab.active{background:var(--pink2);border-color:#a9cad8;color:var(--deep);transform:translateX(4px)}
+.promptbox{
+  height:100%;overflow:auto;background:#fbf8f9;border:1px solid var(--line);
+  border-radius:20px;padding:24px 28px;font-size:16px;line-height:1.78;color:#665e63;
+  scrollbar-width:thin;
+}
+.part{border-radius:7px;padding:5px 6px;margin:0 -6px;transition:.25s;white-space:pre-wrap}
+.part.on{background:#d9edf5;color:#244754;box-shadow:0 0 0 1px #a7cad9}
+.prompt-title{font-weight:900;color:#263238;font-size:15px}
+.label{font-weight:800;color:#5f94aa}
+.hint{font-size:11px;color:#a3999f;margin-top:8px}
+.bottom{height:58px;display:flex;align-items:end;justify-content:center}
+.counter{font-size:12px;color:#9d9399;letter-spacing:.12em}
+.progress{width:170px;height:5px;background:#e5eef2;border-radius:999px;margin:0 12px 4px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--pink);width:25%;transition:.3s}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:24px}
+.card{border:1px solid var(--line);border-radius:20px;background:#fff;padding:20px}
+.card b{display:block;color:var(--deep);font-size:18px;margin-bottom:5px}
+.card span{font-size:14px;line-height:1.5;color:#81777d}
+@media(max-width:850px){
+ .shell{width:97vw;height:95vh;padding:20px}.nav{display:none}.stage-wrap{gap:6px}.arrow{flex-basis:38px;width:38px;height:38px}
+ .slide{padding:30px}.anatomy{grid-template-columns:1fr}.tabs{display:grid;grid-template-columns:repeat(5,1fr)}.tab{padding:8px;font-size:10px}.tab small{display:none}
+}
+
+.anatomy-slide{padding:24px 30px 26px}
+.anatomy-slide .kicker{margin-bottom:6px}
+.anatomy-slide h2{font-size:clamp(25px,2.45vw,38px);margin-bottom:12px}
+.anatomy-slide .anatomy{
+  grid-template-columns:190px minmax(0,1fr);
+  gap:16px;
+  height:calc(100% - 64px);
+}
+.anatomy-slide .tabs{gap:8px}
+.anatomy-slide .tab{padding:11px 12px;border-radius:14px}
+.anatomy-slide .promptbox{
+  font-size:17px;
+  line-height:1.72;
+  padding:22px 26px;
+}
+
+
+/* ===== Prompt structure: executive editorial layout ===== */
+.prompt-structure-slide{
+  padding:22px 34px 24px;
+}
+.prompt-structure-slide .kicker{
+  margin-bottom:4px;
+  font-weight:500;
+  letter-spacing:.14em;
+}
+.prompt-structure-slide h2{
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:clamp(25px,2.3vw,36px);
+  font-weight:600;
+  margin:0 0 13px;
+}
+.prompt-structure{
+  height:calc(100% - 58px);
+  overflow:auto;
+  padding:2px 9px 14px 2px;
+  scrollbar-width:thin;
+  scrollbar-color:#9fc4d5 transparent;
+}
+.prompt-row{
+  display:grid;
+  grid-template-columns:190px minmax(0,1fr);
+  gap:18px;
+  align-items:start;
+  margin-bottom:13px;
+}
+.prompt-tag{
+  border:1px solid #cbdde5;
+  background:#fff;
+  border-radius:999px;
+  padding:8px 15px 7px;
+  min-height:48px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  box-shadow:0 2px 7px rgba(68,100,114,.035);
+}
+.prompt-tag b{
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:15px;
+  line-height:1.15;
+  font-weight:600;
+  letter-spacing:.025em;
+  color:#41525b;
+}
+.prompt-tag span{
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:12px;
+  line-height:1.2;
+  font-weight:300;
+  color:#94a0a6;
+  margin-top:4px;
+}
+.prompt-content{
+  min-width:0;
+  padding-top:1px;
+}
+.prompt-rule{
+  height:28px;
+  border-radius:999px;
+  background:#dbeef5;
+  color:#477f98;
+  display:flex;
+  align-items:center;
+  padding:0 15px;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:11px;
+  font-weight:500;
+  letter-spacing:.10em;
+}
+.prompt-content p{
+  white-space:pre-wrap;
+  margin:7px 10px 0;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:17px;
+  line-height:1.62;
+  font-weight:300;
+  color:#40515a;
+}
+.row-role .prompt-content p,
+.row-instruction .prompt-content p{
+  font-weight:400;
+}
+.row-constraint .prompt-content p{
+  font-size:16px;
+  line-height:1.55;
+}
+.row-constraint .prompt-rule{
+  background:#cfe7f1;
+  color:#356f89;
+}
+.row-constraint .prompt-tag{
+  border-color:#a9cad8;
+  background:#f4fafc;
+}
+.row-constraint .prompt-tag b{
+  color:#477f98;
+}
+@media(max-width:850px){
+  .prompt-row{grid-template-columns:130px 1fr;gap:10px}
+  .prompt-content p{font-size:12px}
+  .row-constraint .prompt-content p{font-size:11.5px}
+}
+
+
+.prompt-tag{cursor:pointer;transition:.18s ease}
+.prompt-tag:hover{background:#f2f8fb;border-color:#a9cad8}
+.prompt-row.selected .prompt-tag{
+  background:#dbeef5;
+  border-color:#8eb9cb;
+  box-shadow:inset 3px 0 0 #477f98;
+}
+.prompt-row.selected .prompt-tag b{color:#356f89}
+.prompt-row.selected .prompt-rule{
+  background:#c9e4ef;
+  color:#2f6f8a;
+}
+.prompt-row.selected .prompt-content p{
+  color:#263f4a;
+  font-weight:400;
+}
+
+
+/* ===== IDEA · Before / After ===== */
+.before-after-slide{padding:25px 34px 23px}
+.idea-heading{
+  display:flex;justify-content:space-between;gap:28px;align-items:flex-start;
+  margin:3px 0 16px;
+}
+.idea-heading h2{
+  margin:0;font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:clamp(26px,2.25vw,36px);line-height:1.18;font-weight:600;
+}
+.idea-heading p{
+  margin:9px 0 0;max-width:830px;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:15px;line-height:1.55;font-weight:300;color:#66767e;
+}
+.idea-note{
+  flex:0 0 auto;border:1px solid #c5dce6;border-radius:999px;
+  padding:8px 14px;font-size:10px;font-weight:500;letter-spacing:.12em;color:#56859a;
+}
+.ba-grid{
+  display:grid;grid-template-columns:minmax(0,1fr) 46px minmax(0,1fr);
+  gap:10px;align-items:center;
+}
+.ba-card{
+  margin:0;background:#fff;border:1px solid #d8e5ea;border-radius:18px;
+  padding:12px;box-shadow:0 8px 22px rgba(61,91,104,.055);
+}
+.ba-label{display:flex;align-items:baseline;gap:10px;margin:0 3px 9px}
+.ba-label b{
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;font-size:16px;font-weight:600;color:#3d7188;
+}
+.ba-label span{
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;font-size:11px;font-weight:300;color:#96a4aa;
+}
+.ba-image{
+  height:clamp(245px,35vh,360px);overflow:hidden;border-radius:11px;
+  background:#eef4f6;border:1px solid #e1eaee;
+}
+.ba-image img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;cursor:zoom-in}
+.ba-card figcaption{padding:10px 3px 2px;display:flex;flex-direction:column;gap:2px}
+.ba-card figcaption b{
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;font-size:14px;font-weight:500;color:#354c56;
+}
+.ba-card figcaption span{
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;font-size:12px;font-weight:300;color:#7b8b92;
+}
+.ba-arrow{
+  width:40px;height:40px;border-radius:50%;background:#d9edf5;color:#3d7892;
+  display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:300;
+}
+.idea-bottomline{
+  margin-top:13px;padding:10px 15px;border-radius:12px;background:#f3f8fa;
+  display:flex;align-items:center;gap:9px;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;font-size:13px;color:#64757c;font-weight:300;
+}
+.idea-bottomline b{font-weight:500;color:#365766}
+.idea-dot{width:7px;height:7px;border-radius:50%;background:#7eb4c9;flex:0 0 auto}
+@media(max-width:900px){
+  .idea-heading p{font-size:13px}
+  .ba-grid{grid-template-columns:1fr 32px 1fr}
+  .ba-image{height:250px}
+  .idea-bottomline{font-size:11px}
+}
+
+
+/* ===== Full-size image viewer ===== */
+.ba-image{cursor:zoom-in}
+.image-modal{
+  position:fixed;inset:0;z-index:9999;
+  display:none;align-items:center;justify-content:center;
+  background:rgba(20,31,37,.86);
+  backdrop-filter:blur(4px);
+  padding:24px;
+}
+.image-modal.open{display:flex}
+.image-modal-inner{
+  position:relative;
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  overflow:auto;
+}
+.image-modal img{
+  display:block;
+  width:auto;height:auto;
+  max-width:none;max-height:none;
+  cursor:zoom-out;
+  box-shadow:0 18px 60px rgba(0,0,0,.35);
+}
+.image-modal-close{
+  position:fixed;top:22px;right:26px;z-index:10001;
+  width:44px;height:44px;border:1px solid rgba(255,255,255,.35);
+  border-radius:50%;background:rgba(255,255,255,.14);color:#fff;
+  font:300 28px/1 Arial,sans-serif;cursor:pointer;
+}
+.image-modal-hint{
+  position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
+  z-index:10001;color:rgba(255,255,255,.82);
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:12px;font-weight:300;letter-spacing:.02em;
+  background:rgba(0,0,0,.25);padding:6px 12px;border-radius:999px;
+}
+
+
+.image-modal img{
+  max-width:calc(100vw - 70px) !important;
+  max-height:calc(100vh - 70px) !important;
+  width:auto !important;height:auto !important;
+  cursor:zoom-in !important;
+}
+.image-modal img.actual-size{
+  max-width:none !important;
+  max-height:none !important;
+  cursor:zoom-out !important;
+}
+
+
+.ba-card figcaption span strong{
+  font-weight:500;color:#4d6975;
+}
+.file-size-summary{
+  margin-top:12px;
+  min-height:42px;
+  border:1px solid #dbe7ec;
+  border-radius:12px;
+  background:#f7fafb;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:13px;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+}
+.file-size-summary span{
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:.12em;
+  color:#8a9aa1;
+  margin-right:3px;
+}
+.file-size-summary b{
+  font-size:16px;
+  font-weight:600;
+  color:#3e687a;
+}
+.file-size-summary i{
+  font-style:normal;
+  font-size:18px;
+  font-weight:300;
+  color:#79a9bc;
+}
+
+
+.result-summary{
+  padding:8px 18px;
+  gap:16px;
+  justify-content:flex-start;
+}
+.result-summary span{
+  flex:0 0 auto;
+  margin:0;
+  white-space:nowrap;
+}
+.result-summary b{
+  font-size:13px;
+  font-weight:400;
+  color:#536b75;
+  line-height:1.45;
+}
+.result-summary b strong{
+  font-weight:600;
+  color:#3e687a;
+}
+
+
+/* ===== PAGE 3 ONLY: overview + focus ===== */
+#promptPage3Hybrid{
+  overflow:hidden;
+}
+#promptPage3Hybrid .p3-title-row{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:20px;
+}
+#promptPage3Hybrid .p3-title-row h2{margin-bottom:0}
+#promptPage3Hybrid .p3-view-all{
+  border:0;
+  background:transparent;
+  color:#7c98a4;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:.11em;
+  padding:7px 2px;
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+}
+#promptPage3Hybrid .p3-view-all.active{
+  color:#4c89a1;
+  border-bottom-color:#8dbdd0;
+}
+
+#promptPage3Hybrid .p3-tabs{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:10px;
+  margin:12px 0 14px;
+}
+#promptPage3Hybrid .p3-tab{
+  height:52px;
+  min-width:0;
+  padding:7px 14px;
+  border:1px solid #c7dde6;
+  border-radius:19px;
+  background:#fff;
+  color:#405762;
+  text-align:left;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  cursor:pointer;
+  transition:background .2s ease,border-color .2s ease,color .2s ease,box-shadow .2s ease;
+}
+#promptPage3Hybrid .p3-tab b{
+  display:block;
+  font-size:12px;
+  line-height:1.1;
+  font-weight:600;
+  white-space:nowrap;
+}
+#promptPage3Hybrid .p3-tab span{
+  display:block;
+  margin-top:3px;
+  font-size:10px;
+  line-height:1.05;
+  font-weight:300;
+  color:#95a5ac;
+}
+#promptPage3Hybrid .p3-tab.active{
+  background:#d9edf5;
+  border-color:#94c5d8;
+  color:#34738d;
+  box-shadow:inset 3px 0 0 #4e91aa;
+}
+#promptPage3Hybrid .p3-tab.active span{color:#6e98a8}
+
+#promptPage3Hybrid .p3-content-area{
+  position:relative;
+  height:calc(100% - 128px);
+  min-height:0;
+  overflow:hidden;
+}
+
+/* Overview: all five components remain visible on entry. */
+#promptPage3Hybrid .p3-overview{
+  height:100%;
+  overflow:auto;
+  padding-right:8px;
+  transition:opacity .2s ease,transform .28s ease;
+}
+#promptPage3Hybrid .p3-overview-row{
+  display:grid;
+  grid-template-columns:150px minmax(0,1fr);
+  gap:14px;
+  align-items:start;
+  padding:8px 0 10px;
+  border-bottom:1px solid #e7eef1;
+}
+#promptPage3Hybrid .p3-overview-row:last-child{border-bottom:0}
+#promptPage3Hybrid .p3-overview-tag{
+  padding-top:3px;
+}
+#promptPage3Hybrid .p3-overview-tag b{
+  display:block;
+  color:#47758a;
+  font-size:11px;
+  font-weight:600;
+  line-height:1.15;
+}
+#promptPage3Hybrid .p3-overview-tag span{
+  display:block;
+  margin-top:3px;
+  color:#9aa8ae;
+  font-size:10px;
+  font-weight:300;
+}
+#promptPage3Hybrid .p3-overview .prompt-content{
+  min-width:0;
+}
+#promptPage3Hybrid .p3-overview .prompt-rule{
+  display:flex;
+  align-items:center;
+  width:100%;
+  min-height:25px;
+  padding:0 13px;
+  margin-bottom:7px;
+  border-radius:999px;
+  background:#d9edf5;
+  color:#447f97;
+  font-size:9px;
+  font-weight:600;
+  letter-spacing:.08em;
+}
+#promptPage3Hybrid .p3-overview .prompt-content p{
+  margin:0;
+  white-space:pre-wrap;
+  color:#435a65;
+  font-size:13px;
+  line-height:1.48;
+  font-weight:400;
+}
+
+/* Focus: same top navigation stays visible; only lower content changes. */
+#promptPage3Hybrid .p3-focus-viewport{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(7px);
+  transition:opacity .22s ease,transform .28s ease;
+}
+#promptPage3Hybrid.focus-mode .p3-overview{
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(7px);
+}
+#promptPage3Hybrid.focus-mode .p3-focus-viewport{
+  opacity:1;
+  pointer-events:auto;
+  transform:none;
+}
+#promptPage3Hybrid .p3-focus-track{
+  display:flex;
+  width:500%;
+  height:100%;
+  transition:transform .42s cubic-bezier(.22,.75,.25,1);
+}
+#promptPage3Hybrid .p3-focus-panel{
+  flex:0 0 20%;
+  width:20%;
+  height:100%;
+  min-width:0;
+  overflow:visible;
+  padding:24px 16px 24px;
+  box-sizing:border-box;
+}
+#promptPage3Hybrid .p3-focus-heading{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+  margin:2px 0 13px;
+  padding-bottom:11px;
+  border-bottom:1px solid #dce8ed;
+}
+#promptPage3Hybrid .p3-focus-heading b{
+  color:#36748e;
+  font-size:20px;
+  font-weight:650;
+  line-height:1.1;
+}
+#promptPage3Hybrid .p3-focus-heading span{
+  color:#94a5ac;
+  font-size:12px;
+  font-weight:300;
+}
+#promptPage3Hybrid .p3-focus-panel .prompt-content{
+  position:relative;
+  min-height:calc(100% - 50px);
+  padding:18px 22px 20px 26px;
+  border-radius:18px;
+  background:
+    linear-gradient(90deg,rgba(214,236,245,.72) 0,rgba(214,236,245,.72) 6px,transparent 6px),
+    linear-gradient(180deg,#fbfdfe,#f8fbfc);
+  border:1px solid #dce8ed;
+}
+#promptPage3Hybrid .p3-focus-panel .prompt-rule{
+  display:inline-flex;
+  align-items:center;
+  min-width:180px;
+  min-height:29px;
+  padding:0 14px;
+  margin-bottom:14px;
+  border-radius:999px;
+  background:#d9edf5;
+  color:#447f97;
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:.09em;
+}
+#promptPage3Hybrid .p3-focus-panel .prompt-content p{
+  margin:0;
+  white-space:pre-wrap;
+  color:#334d59;
+  font-weight:400;
+}
+#promptPage3Hybrid .row-role .prompt-content p,
+#promptPage3Hybrid .row-instruction .prompt-content p{
+  font-size:25px;
+  line-height:1.72;
+  max-width:1050px;
+}
+#promptPage3Hybrid .row-context .prompt-content p{
+  font-size:20px;
+  line-height:1.65;
+}
+#promptPage3Hybrid .row-constraint .prompt-content p{
+  font-size:16px;
+  line-height:1.52;
+}
+#promptPage3Hybrid .row-format .prompt-content p{
+  font-size:19px;
+  line-height:1.62;
+}
+
+
+/* ===== PAGE 3 refinement: less repetition + softer pastel palette ===== */
+#promptPage3Hybrid{
+  --p3-blue-050:#fbfdfe;
+  --p3-blue-100:#f3f9fb;
+  --p3-blue-150:#edf6f9;
+  --p3-blue-200:#e4f1f6;
+  --p3-blue-250:#dcecf2;
+  --p3-blue-300:#cfe5ed;
+  --p3-line:#d9e8ee;
+  --p3-text:#4b6069;
+  --p3-muted:#91a4ac;
+  --p3-accent:#6fa6ba;
+}
+
+/* Equal top tabs, but softer and less saturated. */
+#promptPage3Hybrid .p3-tab{
+  border-color:var(--p3-line) !important;
+  background:#fff !important;
+  color:#53666e !important;
+}
+#promptPage3Hybrid .p3-tab span{color:#a0afb5 !important}
+#promptPage3Hybrid .p3-tab.active{
+  background:var(--p3-blue-200) !important;
+  border-color:#c2dfe9 !important;
+  color:#56879a !important;
+  box-shadow:inset 3px 0 0 #8bb9ca !important;
+}
+#promptPage3Hybrid .p3-tab.active span{color:#86a7b3 !important}
+#promptPage3Hybrid .p3-view-all{color:#91a6ae !important}
+#promptPage3Hybrid .p3-view-all.active{
+  color:#6e9fb1 !important;
+  border-bottom-color:#b4d4df !important;
+}
+
+/* Remove the duplicated left title column completely. */
+#promptPage3Hybrid .p3-overview-row{
+  display:block !important;
+  padding:8px 0 12px !important;
+  border-bottom:1px solid #e8f0f3 !important;
+}
+#promptPage3Hybrid .p3-overview-tag{
+  display:none !important;
+}
+
+/* Overview content now uses the full width. */
+#promptPage3Hybrid .p3-overview .prompt-content{
+  width:100% !important;
+}
+#promptPage3Hybrid .p3-overview .prompt-rule{
+  background:var(--p3-blue-200) !important;
+  color:#648fa0 !important;
+  min-height:26px !important;
+}
+#promptPage3Hybrid .p3-overview .prompt-content p{
+  color:var(--p3-text) !important;
+}
+
+/* Focus view uses the same pastel family. */
+#promptPage3Hybrid .p3-focus-heading{
+  border-bottom-color:#e0edf1 !important;
+}
+#promptPage3Hybrid .p3-focus-heading b{color:#6093a6 !important}
+#promptPage3Hybrid .p3-focus-heading span{color:#9aabb1 !important}
+#promptPage3Hybrid .p3-focus-panel .prompt-content{
+  background:
+    linear-gradient(90deg,#dcecf2 0,#dcecf2 5px,transparent 5px),
+    linear-gradient(180deg,#fcfefe,#f7fbfc) !important;
+  border-color:#dfebef !important;
+}
+#promptPage3Hybrid .p3-focus-panel .prompt-rule{
+  background:var(--p3-blue-200) !important;
+  color:#648fa0 !important;
+}
+#promptPage3Hybrid .p3-focus-panel .prompt-content p{
+  color:#465d67 !important;
+}
+
+
+/* PAGE 3 · VIEW ALL ONLY — equal typography across all 5 components */
+#promptPage3Hybrid:not(.focus-mode) .p3-overview .prompt-content p,
+#promptPage3Hybrid:not(.focus-mode) .p3-overview .row-role .prompt-content p,
+#promptPage3Hybrid:not(.focus-mode) .p3-overview .row-instruction .prompt-content p,
+#promptPage3Hybrid:not(.focus-mode) .p3-overview .row-context .prompt-content p,
+#promptPage3Hybrid:not(.focus-mode) .p3-overview .row-constraint .prompt-content p,
+#promptPage3Hybrid:not(.focus-mode) .p3-overview .row-format .prompt-content p{
+  font-size:16px !important;
+  line-height:1.55 !important;
+  font-weight:400 !important;
+}
+
+/* PAGE 3 — CLEAN OVERRIDE
+   One spacing system; no stacked corrective offsets. */
+#promptPage3Hybrid{
+  --p3-gutter:16px;
+  --p3-body-inset:16px;
+  --p3-number-col:24px;
+  --p3-number-gap:6px;
+}
+
+/* 01–05 navigation uses the same text axis as the section labels/body */
+#promptPage3Hybrid .p3-tab{
+  padding-left:16px !important;
+  padding-right:16px !important;
+  box-sizing:border-box !important;
+}
+
+/* Content card */
+#promptPage3Hybrid .p3-content-area{
+  border:1px solid #d8e6ec !important;
+  border-radius:20px !important;
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  box-sizing:border-box !important;
+}
+
+/* Overview: airy groups, not continuous document rows */
+#promptPage3Hybrid:not(.focus-mode) .p3-overview{
+  padding:24px var(--p3-gutter) 24px !important;
+  box-sizing:border-box !important;
+  overflow:visible !important;
+  height:auto !important;
+  max-height:none !important;
+}
+#promptPage3Hybrid:not(.focus-mode) .p3-overview-row{
+  display:block !important;
+  padding:0 !important;
+  margin:0 0 18px !important;
+  border:0 !important;
+}
+#promptPage3Hybrid:not(.focus-mode) .p3-overview-row:last-child{
+  margin-bottom:0 !important;
+}
+
+/* Focus spacing is handled by the real .p3-focus-panel container above. */
+#promptPage3Hybrid.focus-mode .p3-focus-panel{
+  margin:0 !important;
+  box-sizing:border-box !important;
+}
+
+/* Blue category bar: same width/axis in both modes */
+#promptPage3Hybrid .prompt-rule{
+  display:flex !important;
+  align-items:center !important;
+  width:100% !important;
+  max-width:none !important;
+  min-height:29px !important;
+  margin:0 0 12px !important;
+  padding:0 16px !important;
+  border-radius:999px !important;
+  background:#e2f0f5 !important;
+  color:#5f8fa1 !important;
+  box-sizing:border-box !important;
+}
+
+/* Text sits inside the category group with a modest inset */
+#promptPage3Hybrid .p3-overview .prompt-content,
+#promptPage3Hybrid .p3-focus-panel .prompt-content{
+  width:100% !important;
+  padding:0 var(--p3-body-inset) !important;
+  box-sizing:border-box !important;
+  background:transparent !important;
+  border:0 !important;
+}
+#promptPage3Hybrid .prompt-content > p{
+  margin:0 !important;
+  padding:0 !important;
+}
+
+/* Consistent typography */
+#promptPage3Hybrid .prompt-content,
+#promptPage3Hybrid .prompt-content p,
+#promptPage3Hybrid .prompt-content span{
+  font-size:16px !important;
+  line-height:1.55 !important;
+  font-weight:400;
+}
+#promptPage3Hybrid .focus-source-heading{
+  display:block !important;
+  font-size:17px !important;
+  line-height:1.45 !important;
+  font-weight:700 !important;
+  margin:14px 0 5px !important;
+}
+#promptPage3Hybrid .focus-source-heading:first-child{
+  margin-top:0 !important;
+}
+#promptPage3Hybrid .focus-paragraph{
+  display:block !important;
+  margin:0 0 10px !important;
+}
+
+/* Numbered rows: compact marker, fixed text start */
+#promptPage3Hybrid .p3-list-line,
+#promptPage3Hybrid .focus-list{
+  display:grid !important;
+  grid-template-columns:var(--p3-number-col) minmax(0,1fr) !important;
+  column-gap:var(--p3-number-gap) !important;
+  align-items:start !important;
+  margin:3px 0 !important;
+}
+#promptPage3Hybrid .p3-list-no,
+#promptPage3Hybrid .focus-list-no{
+  text-align:right !important;
+  white-space:nowrap !important;
+  font-variant-numeric:tabular-nums;
+}
+#promptPage3Hybrid .p3-list-text,
+#promptPage3Hybrid .focus-list-text{
+  min-width:0;
+}
+
+/* Sub-bullets align with item text */
+#promptPage3Hybrid .p3-list-sub,
+#promptPage3Hybrid .focus-sub{
+  display:grid !important;
+  grid-template-columns:var(--p3-number-col) minmax(0,1fr) !important;
+  column-gap:var(--p3-number-gap) !important;
+  margin:3px 0 !important;
+}
+#promptPage3Hybrid .focus-sub-text{
+  grid-column:2 !important;
+}
+
+/* Source labels in overview */
+#promptPage3Hybrid:not(.focus-mode) .p3-list-plain{
+  margin:0 0 4px !important;
+}
+
+
+/* ===== HOME · Y2K editorial cover ===== */
+.hero-slide{
+  overflow:hidden;
+  padding:38px 48px 40px;
+  background:
+    radial-gradient(circle at 78% 28%,rgba(202,229,240,.52) 0 11%,transparent 11.4%),
+    radial-gradient(circle at 18% 82%,rgba(229,241,246,.72) 0 9%,transparent 9.4%),
+    linear-gradient(145deg,#fbfdfe 0%,#ffffff 52%,#f2f8fa 100%);
+}
+.hero-platform{
+  position:relative;z-index:3;
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 14px;
+  border:1px solid #c9dde5;
+  border-radius:999px;
+  background:rgba(255,255,255,.78);
+  backdrop-filter:blur(8px);
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:13px;font-weight:500;letter-spacing:.035em;
+  color:#4d6874;
+  box-shadow:0 7px 22px rgba(70,103,117,.055);
+}
+.hero-platform span{
+  font-family:Georgia,"Times New Roman",serif;
+  font-style:italic;
+  color:#77a8ba;
+}
+.hero-main{
+  position:relative;z-index:2;
+  width:min(930px,78%);
+  margin-top:50px;
+}
+.hero-eyebrow{
+  margin-bottom:14px;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:11px;font-weight:500;letter-spacing:.20em;
+  color:#8298a2;
+}
+.hero-title{
+  display:grid;
+  grid-template-columns:auto auto 1fr;
+  grid-template-areas:
+    "script for ."
+    "excel excel excel"
+    "auto auto auto";
+  align-items:end;
+  width:max-content;
+  max-width:100%;
+  margin:0;
+  line-height:.82;
+  letter-spacing:0;
+}
+.hero-script{
+  grid-area:script;
+  margin:0 12px 7px 3px;
+  font-family:"Segoe Script","Brush Script MT","Lucida Handwriting",cursive;
+  font-size:clamp(38px,4.3vw,68px);
+  font-weight:400;
+  letter-spacing:-.06em;
+  color:#6f9fb2;
+  transform:rotate(-4deg);
+  transform-origin:left bottom;
+}
+.hero-for{
+  grid-area:for;
+  margin:0 0 12px;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(22px,2.2vw,34px);
+  font-style:italic;
+  font-weight:400;
+  color:#9aa9af;
+}
+.hero-excel{
+  grid-area:excel;
+  font-family:"Arial Black","Kanit","Tahoma",sans-serif;
+  font-size:clamp(72px,8.3vw,126px);
+  font-weight:900;
+  letter-spacing:-.075em;
+  color:#172127;
+}
+.hero-automation{
+  grid-area:auto;
+  margin-top:8px;
+  font-family:"Kanit","Arial Narrow","Tahoma",sans-serif;
+  font-size:clamp(36px,4.8vw,72px);
+  font-weight:300;
+  letter-spacing:.17em;
+  color:#6f9fb2;
+}
+.hero-copy{
+  display:flex;align-items:flex-start;gap:14px;
+  margin-top:27px;
+}
+.hero-copy-line{
+  width:54px;height:1px;margin-top:13px;
+  background:#93b9c8;flex:0 0 auto;
+}
+.hero-copy p{
+  margin:0;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:16px;line-height:1.6;font-weight:300;
+  color:#61727a;
+}
+.hero-copy b{font-weight:500;color:#405964}
+.hero-tags{
+  display:flex;align-items:center;gap:11px;
+  margin-top:25px;
+  font-family:"Kanit","Tahoma",sans-serif;
+  font-size:10px;font-weight:600;letter-spacing:.15em;
+  color:#68818c;
+}
+.hero-tags span{
+  padding:7px 11px;
+  border:1px solid #d4e4ea;
+  border-radius:999px;
+  background:rgba(255,255,255,.7);
+}
+.hero-tags i{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:15px;font-weight:400;font-style:italic;
+  color:#9bb7c2;
+}
+.hero-side-note{
+  position:absolute;right:48px;bottom:42px;z-index:2;
+  padding-left:13px;border-left:1px solid #b8d1db;
+  font-family:"Kanit","Tahoma",sans-serif;
+  font-size:9px;line-height:1.65;font-weight:500;
+  letter-spacing:.18em;text-align:left;
+  color:#8ba0a9;
+}
+.hero-y2k-orbit{
+  position:absolute;z-index:1;border:1px solid rgba(126,174,193,.27);
+  border-radius:50%;pointer-events:none;
+}
+.orbit-a{
+  width:410px;height:410px;right:-82px;top:38px;
+}
+.orbit-a:after{
+  content:"";position:absolute;inset:35px;border:1px solid rgba(126,174,193,.16);border-radius:50%;
+}
+.orbit-b{
+  width:185px;height:185px;right:205px;top:125px;
+  border-style:dashed;transform:rotate(18deg);
+}
+.hero-y2k-star{
+  position:absolute;z-index:1;color:#9bc1d0;pointer-events:none;
+}
+.star-a{right:145px;top:92px;font-size:38px;transform:rotate(14deg)}
+.star-b{right:315px;top:205px;font-size:22px;opacity:.72}
+@media(max-width:900px){
+  .hero-slide{padding:30px}
+  .hero-main{width:88%;margin-top:42px}
+  .hero-side-note{display:none}
+  .hero-automation{letter-spacing:.11em}
+}
+
+
+/* ===== Two-content-page Y2K indicator ===== */
+.bottom{height:58px;display:flex;align-items:flex-end;justify-content:center}
+.y2k-page-indicator{height:22px;display:flex;align-items:center;justify-content:center;gap:10px}
+.y2k-dot{width:7px;height:7px;border-radius:50%;border:1.5px solid #9fc4d5;background:#fff;box-sizing:border-box;transition:.28s}
+.y2k-line{width:128px;height:2px;border-radius:999px;background:#dce9ee;position:relative;overflow:hidden}
+.y2k-line::after{content:"";position:absolute;inset:0;width:50%;border-radius:inherit;background:#9fc4d5;transition:transform .35s ease}
+.bottom.idea-state .y2k-dot-left,.bottom.prompt-state .y2k-dot-right{background:#7fb2c6;border-color:#7fb2c6;transform:scale(1.12);box-shadow:0 0 0 3px rgba(159,196,213,.16)}
+.bottom.idea-state .y2k-line::after{transform:translateX(0)}
+.bottom.prompt-state .y2k-line::after{transform:translateX(100%)}
+.bottom.cover-state{visibility:hidden}
+
+/* ===== Page 3 only: customizable values ===== */
+#promptPage3Hybrid .p3-title-actions{display:flex;align-items:center;gap:20px}
+#promptPage3Hybrid .customize-key{display:flex;align-items:center;gap:6px;white-space:nowrap;font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif}
+#promptPage3Hybrid .customize-key i{width:7px;height:7px;border-radius:50%;background:#6fa9bf;box-shadow:0 0 0 3px rgba(111,169,191,.13)}
+#promptPage3Hybrid .customize-key b{font-size:9px;font-weight:700;letter-spacing:.08em;color:#5f91a5}
+#promptPage3Hybrid .customize-key span{font-size:9px;font-weight:300;color:#9aa9af}
+/* VIEW ALL stays clean — pills appear only in Focus mode */
+#promptPage3Hybrid:not(.focus-mode) .customizable-value{
+  display:inline !important;
+  color:inherit !important;
+  font:inherit !important;
+  letter-spacing:inherit !important;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+  box-shadow:none !important;
+}
+
+#promptPage3Hybrid.focus-mode .customizable-value{
+  display:inline !important;
+  color:#4f8fa8 !important;
+  font-weight:600 !important;
+  font-size:inherit !important;
+  line-height:inherit !important;
+  letter-spacing:inherit !important;
+  background:linear-gradient(transparent 84%,rgba(111,169,191,.34) 84%) !important;
+  border:0 !important;
+  border-radius:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+  vertical-align:baseline !important;
+  box-shadow:none !important;
+}
+
+
+#promptPage3Hybrid.focus-mode .row-constraint .customizable-value.repeat-column{
+  color:inherit !important;
+  font-weight:inherit !important;
+  background:none !important;
+}
+
+
+/* ===== PAGE 3 · customizable values: color only ===== */
+#promptPage3Hybrid:not(.focus-mode) .customizable-value{
+  color:inherit !important;
+  font:inherit !important;
+  background:none !important;
+  border:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+  box-shadow:none !important;
+}
+#promptPage3Hybrid.focus-mode .customizable-value{
+  color:#6b9fb3 !important;
+  font-weight:inherit !important;
+  background:none !important;
+  border:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+  box-shadow:none !important;
+}
+
+
+#promptPage3Hybrid.focus-mode .row-constraint .customizable-value.repeat-column{
+  color:#6b9fb3 !important;
+  font-weight:inherit !important;
+  background:none !important;
+}
+
+
+/* ===== PAGE 4 · EXTEND ===== */
+.extend-slide{
+  background:
+    radial-gradient(circle at 86% 14%,rgba(206,232,243,.55) 0 70px,transparent 71px),
+    #fff;
+}
+.extend-wrap{
+  width:min(940px,90%);
+  height:100%;
+  margin:0 auto;
+  padding:30px 0 18px;
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+}
+.extend-eyebrow{
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:.16em;
+  color:#84a7b5;
+  text-transform:uppercase;
+}
+.extend-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  margin-top:7px;
+}
+.extend-script{
+  font-family:"Brush Script MT","Segoe Script","Kanit",cursive;
+  font-size:27px;
+  line-height:.8;
+  font-weight:400;
+  color:#87b7c8;
+  transform:rotate(-4deg);
+  transform-origin:left bottom;
+  margin-left:3px;
+}
+.extend-head h2{
+  margin:0;
+  font-family:"Arial Black","Kanit",sans-serif;
+  font-size:42px;
+  line-height:.88;
+  letter-spacing:-.055em;
+  color:#25282b;
+}
+.extend-head h2 span{color:#8ab8c9}
+.extend-intro{
+  margin:0 0 3px;
+  max-width:370px;
+  text-align:right;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:12px;
+  line-height:1.65;
+  font-weight:300;
+  color:#6f7c82;
+}
+.extend-card{
+  margin-top:20px;
+  border:1px solid #d7e5ea;
+  border-radius:18px;
+  background:#fff;
+  box-shadow:0 12px 30px rgba(63,94,107,.06);
+  overflow:hidden;
+}
+.extend-card-top{
+  height:38px;
+  padding:0 16px 0 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:#e8f3f7;
+  border-bottom:1px solid #d7e5ea;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:9px;
+  font-weight:600;
+  letter-spacing:.12em;
+  color:#6d9aad;
+}
+.extend-plus{
+  font-size:17px;
+  line-height:1;
+  font-weight:300;
+}
+.extend-copy{
+  display:grid;
+  grid-template-columns:46px 1fr;
+  gap:13px;
+  padding:18px 22px 17px;
+}
+.extend-no{
+  width:32px;height:32px;
+  border:1px solid #bad5df;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:"Kanit",sans-serif;
+  font-size:10px;font-weight:600;
+  color:#6b9fb3;
+}
+.extend-text{
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:12px;
+  line-height:1.65;
+  font-weight:300;
+  color:#3e464a;
+}
+.extend-text strong{font-weight:500}
+.extend-checks{
+  display:flex;
+  gap:9px;
+  margin:12px 0 8px;
+}
+.extend-checks span{
+  padding:5px 11px;
+  border:1px solid #c9dfe8;
+  border-radius:999px;
+  background:#fbfdfe;
+  color:#5f8fa1;
+  font-size:10px;
+  font-weight:400;
+}
+.extend-text p{
+  margin:0;
+  color:#7b888e;
+  font-size:10.5px;
+}
+.extend-flow{
+  margin-top:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:.08em;
+  color:#8a969b;
+}
+.extend-flow i{
+  font-style:normal;
+  color:#b7cbd3;
+  font-weight:300;
+}
+.extend-flow .flow-accent{
+  color:#5f96aa;
+}
+.extend-flow .flow-result{
+  padding:5px 11px;
+  border:1px solid #a9cbd8;
+  border-radius:999px;
+  color:#4f879e;
+  background:#f5fbfd;
+}
+.extend-note{
+  margin:auto 0 0;
+  text-align:center;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:9.5px;
+  font-weight:300;
+  color:#9aa6ab;
+}
+
+
+/* Three content pages: HOME is still not counted */
+.y2k-page-indicator.y2k-three{gap:8px}
+.y2k-page-indicator.y2k-three .y2k-line{width:56px}
+.bottom.idea-state .y2k-dot-left,
+.bottom.prompt-state .y2k-dot-mid,
+.bottom.extend-state .y2k-dot-right{
+  background:#7fb2c6;border-color:#7fb2c6;transform:scale(1.12);
+  box-shadow:0 0 0 3px rgba(159,196,213,.16)
+}
+.bottom.idea-state .y2k-dot-mid,.bottom.idea-state .y2k-dot-right,
+.bottom.prompt-state .y2k-dot-left,.bottom.prompt-state .y2k-dot-right,
+.bottom.extend-state .y2k-dot-left,.bottom.extend-state .y2k-dot-mid{
+  background:#fff;border-color:#9fc4d5;transform:none;box-shadow:none
+}
+
+
+/* EXTEND: show the added Prompt in detail while preserving the preferred design */
+.extend-card{margin-top:16px !important}
+.extend-copy.extend-copy-detailed{
+  grid-template-columns:42px 1fr;
+  gap:12px;
+  padding:13px 20px 10px;
+}
+.extend-copy.extend-copy-summary{padding-top:10px;padding-bottom:12px}
+.extend-copy-detailed .extend-no{
+  width:29px;height:29px;
+  font-size:9px;
+}
+.extend-copy-detailed .extend-text{
+  font-size:9.3px;
+  line-height:1.42;
+}
+.extend-added-lines{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:4px 16px;
+  margin-top:7px;
+}
+.extend-added-lines span{
+  position:relative;
+  padding-left:11px;
+  color:#6f7f86;
+  font-size:8.8px;
+  line-height:1.4;
+}
+.extend-added-lines span::before{
+  content:"–";
+  position:absolute;
+  left:0;
+  color:#79a9bb;
+}
+.extend-added-lines.compact{
+  grid-template-columns:1fr 1fr 1fr;
+  gap:3px 14px;
+}
+.extend-card-divider{
+  height:1px;
+  margin:0 20px;
+  background:#e8eff2;
+}
+.extend-flow{margin-top:13px !important}
+.extend-note{
+  margin:auto 0 0 !important;
+  font-size:9px !important;
+}
+
+
+/* ===== EXTEND · readability pass ===== */
+.extend-wrap{
+  width:min(1040px,92%) !important;
+}
+.extend-card{
+  margin-top:18px !important;
+}
+.extend-card-top{
+  height:40px !important;
+  font-size:10px !important;
+}
+.extend-copy.extend-copy-detailed{
+  grid-template-columns:48px 1fr !important;
+  gap:14px !important;
+  padding:17px 22px 14px !important;
+}
+.extend-copy.extend-copy-summary{
+  padding-top:14px !important;
+  padding-bottom:17px !important;
+}
+.extend-copy-detailed .extend-no{
+  width:34px !important;
+  height:34px !important;
+  font-size:10px !important;
+}
+.extend-copy-detailed .extend-text{
+  font-size:11.2px !important;
+  line-height:1.55 !important;
+}
+.extend-added-lines{
+  gap:6px 22px !important;
+  margin-top:9px !important;
+}
+.extend-added-lines span{
+  padding-left:13px !important;
+  font-size:10.5px !important;
+  line-height:1.5 !important;
+}
+.extend-added-lines.compact{
+  grid-template-columns:1fr 1fr !important;
+  gap:5px 22px !important;
+}
+.extend-card-divider{
+  margin:0 22px !important;
+}
+.extend-flow{
+  margin-top:16px !important;
+  font-size:10px !important;
+}
+.extend-note{
+  font-size:9.8px !important;
+}
+
+
+/* ===== EXTEND · all additions overview ===== */
+.extend-overview-wrap{width:min(980px,91%) !important}
+.extend-head-with-view{align-items:flex-end !important}
+.extend-head-right{display:flex;flex-direction:column;align-items:flex-end;gap:9px}
+.extend-view-btn{
+  appearance:none;border:1px solid #b8d5e0;background:#fff;color:#6796aa;
+  border-radius:999px;padding:5px 11px;font-family:"Kanit","Tahoma",sans-serif;
+  font-size:8.5px;font-weight:600;letter-spacing:.08em;cursor:pointer;
+}
+.extend-view-btn:hover{background:#eef7fa}
+.extend-grid{
+  margin-top:17px;display:grid;grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.extend-item{
+  min-height:64px;box-sizing:border-box;
+  display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start;
+  padding:10px 12px;border:1px solid #dce8ed;border-radius:13px;background:#fff;
+}
+.extend-item-no{
+  width:26px;height:26px;border:1px solid #c4dce5;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:"Kanit",sans-serif;font-size:8px;font-weight:600;color:#72a3b6;
+}
+.extend-item b{
+  display:block;margin:0 0 2px;font-family:"Kanit","Tahoma",sans-serif;
+  font-size:10.5px;font-weight:500;color:#333b3f;
+}
+.extend-item p{
+  margin:0;font-family:"Kanit","Tahoma",sans-serif;font-size:8.8px;
+  line-height:1.42;font-weight:300;color:#77858b;
+}
+.extend-item em{font-style:normal;color:#5f96aa;font-weight:400}
+.extend-item-accent{background:#f8fcfd;border-color:#c7dfe8}
+.extend-item-wide{grid-column:1/-1;min-height:58px}
+.extend-flow{margin-top:12px !important}
+.updated-prompt-modal{
+  position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;
+}
+.updated-prompt-modal.open{display:flex}
+.updated-prompt-backdrop{position:absolute;inset:0;background:rgba(35,48,54,.32);backdrop-filter:blur(3px)}
+.updated-prompt-dialog{
+  position:relative;width:min(920px,86vw);height:min(690px,82vh);
+  display:flex;flex-direction:column;background:#fff;border:1px solid #d4e4ea;
+  border-radius:20px;box-shadow:0 24px 70px rgba(40,62,72,.18);overflow:hidden;
+}
+.updated-prompt-top{
+  flex:0 0 56px;padding:0 18px 0 22px;display:flex;align-items:center;justify-content:space-between;
+  background:#e8f3f7;border-bottom:1px solid #d4e4ea;font-family:"Kanit","Tahoma",sans-serif;
+}
+.updated-prompt-top div{display:flex;align-items:baseline;gap:10px}
+.updated-prompt-top span{font-size:8px;font-weight:600;letter-spacing:.13em;color:#7ca5b5}
+.updated-prompt-top strong{font-size:12px;font-weight:500;color:#39484e}
+.updated-prompt-close{
+  width:30px;height:30px;border:0;border-radius:50%;background:transparent;
+  font-size:22px;font-weight:300;line-height:1;color:#6d9aad;cursor:pointer;
+}
+.updated-prompt-close:hover{background:rgba(255,255,255,.75)}
+.updated-prompt-full{
+  flex:1;overflow:auto;margin:0;padding:22px 26px 28px;
+  white-space:pre-wrap;word-break:break-word;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:11.5px;line-height:1.65;font-weight:300;color:#343d41;
+}
+
+
+/* ===== EXTEND · typography matched to PROMPT page ===== */
+#extendSlide .extend-wrap{
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  scrollbar-width:thin;
+  padding-bottom:24px !important;
+}
+#extendSlide .extend-item{
+  grid-template-columns:38px 1fr !important;
+  gap:12px !important;
+  padding:13px 15px !important;
+  min-height:78px !important;
+}
+#extendSlide .extend-item-no{
+  width:31px !important;
+  height:31px !important;
+  font-size:10px !important;
+}
+#extendSlide .extend-item b{
+  font-size:13px !important;
+  line-height:1.45 !important;
+  margin-bottom:4px !important;
+}
+#extendSlide .extend-item p{
+  font-size:11.5px !important;
+  line-height:1.55 !important;
+}
+#extendSlide .extend-grid{
+  gap:10px !important;
+}
+#extendSlide .extend-item-wide{
+  min-height:72px !important;
+}
+#extendSlide .extend-intro{
+  font-size:11.5px !important;
+  line-height:1.6 !important;
+}
+#extendSlide .extend-view-btn{
+  font-size:9.5px !important;
+  padding:6px 12px !important;
+}
+#extendSlide .extend-flow{
+  font-size:10.5px !important;
+  margin-top:15px !important;
+  padding-bottom:4px;
+}
+/* Full updated prompt modal: same comfortable reading scale */
+.updated-prompt-full{
+  font-size:13px !important;
+  line-height:1.7 !important;
+}
+.updated-prompt-top strong{
+  font-size:13px !important;
+}
+
+
+/* ===== EXTEND V3 · same reading scale as PROMPT + ADD TO PROMPT card ===== */
+#extendSlide .extend-v3-wrap{
+  width:min(1040px,92%) !important;
+  overflow:visible !important;
+  padding:24px 0 18px !important;
+}
+#extendSlide .extend-v3-head{
+  margin-top:5px !important;
+}
+#extendSlide .extend-head-right{
+  display:flex;flex-direction:column;align-items:flex-end;gap:9px;
+}
+#extendSlide .extend-intro{
+  font-size:12px !important;line-height:1.6 !important;
+}
+#extendSlide .extend-view-btn{
+  appearance:none;border:1px solid #b8d5e0;background:#fff;color:#6796aa;
+  border-radius:999px;padding:6px 13px;font-family:"Kanit","Tahoma",sans-serif;
+  font-size:10px;font-weight:600;letter-spacing:.07em;cursor:pointer;
+}
+#extendSlide .extend-add-card{
+  margin-top:17px;border:1px solid #cfe1e8;border-radius:17px;
+  background:#fff;overflow:hidden;box-shadow:0 10px 25px rgba(63,94,107,.045);
+}
+#extendSlide .extend-add-top{
+  height:38px;padding:0 17px;display:flex;align-items:center;justify-content:space-between;
+  background:#e6f2f6;border-bottom:1px solid #cfe1e8;
+  font-family:"Kanit","Tahoma",sans-serif;font-size:10px;font-weight:600;
+  letter-spacing:.11em;color:#6799ad;
+}
+#extendSlide .extend-add-body{
+  display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:118px;
+}
+#extendSlide .extend-add-row{
+  display:grid;grid-template-columns:39px 1fr;gap:12px;
+  height:118px;min-height:118px;box-sizing:border-box;padding:14px 16px;
+  border-bottom:1px solid #e7eef1;align-content:center;
+}
+#extendSlide .extend-add-row:nth-child(odd):not(:last-child){
+  border-right:1px solid #e7eef1;
+}
+#extendSlide .extend-add-row:last-child{
+  grid-column:auto;min-height:118px;height:118px;border-bottom:0;border-right:1px solid #e7eef1;
+}
+#extendSlide .extend-add-highlight{background:#f8fcfd}
+#extendSlide .extend-add-no{
+  width:31px;height:31px;border:1px solid #bcd8e3;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:"Kanit",sans-serif;font-size:10px;font-weight:600;color:#70a2b5;
+}
+#extendSlide .extend-add-content{
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+}
+#extendSlide .extend-add-content strong{
+  display:block;margin:0 0 4px;font-size:13px;line-height:1.42;
+  font-weight:500;color:#30383c;
+}
+#extendSlide .extend-add-content p{
+  margin:0;font-size:11.5px;line-height:1.58;font-weight:300;color:#6f7e84;
+}
+#extendSlide .extend-add-content em{
+  font-style:normal;color:#5f96aa;font-weight:400;
+}
+#extendSlide .extend-mini-pills{
+  display:flex;flex-wrap:wrap;gap:6px;margin:5px 0 6px;
+}
+#extendSlide .extend-mini-pills span{
+  padding:4px 9px;border:1px solid #bdd9e4;border-radius:999px;
+  font-size:9.5px;line-height:1.2;color:#6497aa;background:#fff;
+}
+#extendSlide .extend-flow{
+  margin-top:13px !important;font-size:10.5px !important;
+}
+/* keep modal comfortably readable */
+.updated-prompt-full{font-size:13px !important;line-height:1.7 !important}
+
+
+/* ===== EXTEND · EXACT PROMPT PAGE READING SCALE ===== */
+#extendSlide .extend-add-content strong{
+  font-size:16px !important;
+  line-height:1.55 !important;
+  font-weight:500 !important;
+}
+#extendSlide .extend-add-content p{
+  font-size:16px !important;
+  line-height:1.55 !important;
+  font-weight:300 !important;
+}
+#extendSlide .extend-add-no{
+  width:36px !important;
+  height:36px !important;
+  font-size:11px !important;
+}
+#extendSlide .extend-mini-pills span{
+  font-size:12px !important;
+  padding:5px 10px !important;
+}
+#extendSlide .extend-add-row{
+  grid-template-columns:44px 1fr !important;
+  gap:14px !important;
+  padding:16px 18px !important;
+  min-height:112px !important;
+}
+#extendSlide .extend-add-row:last-child{
+  min-height:94px !important;
+}
+#extendSlide .extend-add-body{
+  display:block !important;
+}
+#extendSlide .extend-add-row{
+  border-right:0 !important;
+}
+#extendSlide .extend-add-card{
+  max-height:480px !important;
+  overflow-y:auto !important;
+}
+#extendSlide .extend-add-top{
+  position:sticky;
+  top:0;
+  z-index:2;
+  height:42px !important;
+  font-size:10px !important;
+}
+
+
+/* UPDATED PROMPT · visually distinguish additions from the original */
+.updated-prompt-top div{
+  gap:12px !important;
+}
+.updated-prompt-top strong{
+  margin-left:2px;
+}
+.updated-diff-key{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-left:10px;font-style:normal;
+  font-size:9px;font-weight:400;letter-spacing:0;
+  color:#78909a;
+}
+.updated-diff-key i{
+  width:8px;height:8px;border-radius:50%;
+  background:#79a9bb;
+}
+.updated-prompt-diff span{
+  display:block;
+  min-height:1.65em;
+  border-radius:5px;
+  padding:0 5px;
+  margin-left:-5px;
+}
+.updated-prompt-diff .upd-line{
+  color:#4f8da6;
+  background:#eef7fa;
+  font-weight:400;
+}
+
+
+/* ===== EXTEND · use full space, 2-column layout, no card scrolling ===== */
+#extendSlide .extend-v3-wrap{
+  width:min(1180px,94%) !important;
+}
+#extendSlide .extend-add-card{
+  max-height:none !important;
+  overflow:visible !important;
+}
+#extendSlide .extend-add-body{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  grid-auto-flow:row !important;
+}
+#extendSlide .extend-add-row{
+  grid-template-columns:44px 1fr !important;
+  gap:14px !important;
+  min-height:0 !important;
+  padding:15px 18px !important;
+  border-bottom:1px solid #e7eef1 !important;
+  border-right:0 !important;
+}
+#extendSlide .extend-add-row:nth-child(odd):not(:last-child){
+  border-right:1px solid #e7eef1 !important;
+}
+#extendSlide .extend-add-row:nth-child(5),
+#extendSlide .extend-add-row:nth-child(6){
+  border-bottom:1px solid #e7eef1 !important;
+}
+#extendSlide .extend-add-row:last-child{
+  grid-column:1 / -1 !important;
+  min-height:0 !important;
+  border-bottom:0 !important;
+}
+#extendSlide .extend-add-content strong{
+  font-size:16px !important;
+  line-height:1.42 !important;
+}
+#extendSlide .extend-add-content p{
+  font-size:16px !important;
+  line-height:1.42 !important;
+}
+#extendSlide .extend-mini-pills{
+  margin:5px 0 6px !important;
+}
+#extendSlide .extend-mini-pills span{
+  font-size:12px !important;
+}
+#extendSlide .extend-flow{
+  margin-top:12px !important;
+}
+
+
+/* ===== EXTEND · align content origin with IDEA / PROMPT ===== */
+#extendSlide.extend-slide{
+  padding:22px 34px 24px !important;
+}
+#extendSlide .extend-v3-wrap{
+  width:100% !important;
+  max-width:none !important;
+  height:100% !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+#extendSlide .extend-v3-head{
+  margin-top:5px !important;
+}
+
+/* ===== UPDATED PROMPT MODAL · compact reading layout ===== */
+.updated-prompt-dialog{
+  width:min(1240px,92vw) !important;
+  height:min(760px,88vh) !important;
+}
+.updated-prompt-top{
+  flex:0 0 54px !important;
+  padding:0 24px !important;
+}
+.updated-prompt-top span{
+  font-size:9px !important;
+}
+.updated-prompt-top strong{
+  font-size:14px !important;
+}
+.updated-diff-key{
+  font-size:10px !important;
+}
+
+/* Match the PROMPT page reading size and remove exaggerated vertical gaps */
+.updated-prompt-full{
+  padding:22px 28px 26px !important;
+  font-size:16px !important;
+  line-height:1.55 !important;
+  font-weight:400 !important;
+  color:#4b6069 !important;
+  white-space:normal !important;
+}
+
+/* Each real prompt line is compact; empty helper spans take no space */
+.updated-prompt-diff span{
+  display:block !important;
+  min-height:0 !important;
+  margin:0 !important;
+  padding:1px 0 !important;
+  border-radius:0 !important;
+  line-height:1.55 !important;
+}
+.updated-prompt-diff span:empty{
+  display:none !important;
+}
+
+/* Additions: color only — no full-width highlight bars */
+.updated-prompt-diff .upd-line{
+  color:#5f94aa !important;
+  background:transparent !important;
+  font-weight:500 !important;
+}
+
+/* Keep section labels visually calm */
+.updated-prompt-diff span:not(.upd-line){
+  color:#40515a !important;
+}
+
+
+/* ===== UPDATED PROMPT · match PROMPT page visual language ===== */
+.updated-prompt-top{
+  background:#fff !important;
+  border-bottom:1px solid #d7e5ea !important;
+}
+.updated-prompt-top div{
+  gap:10px !important;
+}
+.updated-prompt-top span{
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif !important;
+  font-size:10px !important;
+  font-weight:600 !important;
+  letter-spacing:.14em !important;
+  color:#5f96aa !important;
+}
+.updated-prompt-top strong{
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif !important;
+  font-size:16px !important;
+  line-height:1.4 !important;
+  font-weight:600 !important;
+  color:#26383f !important;
+  margin:0 !important;
+}
+.updated-prompt-full{
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif !important;
+  font-size:16px !important;
+  line-height:1.55 !important;
+  font-weight:400 !important;
+  color:#536b75 !important;
+}
+.updated-prompt-diff span,
+.updated-prompt-diff span:not(.upd-line){
+  color:#536b75 !important;
+  font-weight:400 !important;
+}
+.updated-prompt-diff .upd-line{
+  color:#5f96aa !important;
+  background:transparent !important;
+  font-weight:500 !important;
+}
+.updated-prompt-close{
+  color:#5f96aa !important;
+}
+
+
+/* ===== VIEW PROMPT · SAME TYPOGRAPHIC HIERARCHY AS PROMPT PAGE ===== */
+.updated-prompt-full,
+.updated-prompt-diff span,
+.updated-prompt-diff span:not(.upd-line),
+.updated-prompt-diff .upd-line{
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif !important;
+  font-size:16px !important;
+  line-height:1.55 !important;
+  font-weight:400 !important;
+  color:#536b75 !important;
+  background:transparent !important;
+}
+
+/* Updated content differs by accent color only; never by boldness */
+.updated-prompt-diff .upd-line{
+  color:#5f96aa !important;
+}
+
+/* Section / reading anchors: same stronger hierarchy used on PROMPT */
+.updated-prompt-diff .modal-section-heading{
+  font-weight:600 !important;
+  color:#536b75 !important;
+  margin-top:8px !important;
+}
+.updated-prompt-diff .modal-anchor{
+  font-weight:500 !important;
+  color:#536b75 !important;
+}
+
+
+/* ===== VIEW PROMPT · mirror PAGE PROMPT hierarchy exactly ===== */
+.updated-prompt-full{
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif !important;
+  font-size:16px !important;
+  line-height:1.55 !important;
+  font-weight:400 !important;
+  color:#536b75 !important;
+}
+.updated-prompt-diff span,
+.updated-prompt-diff span:not(.upd-line),
+.updated-prompt-diff .upd-line{
+  font-size:16px !important;
+  line-height:1.55 !important;
+  font-weight:400 !important;
+  margin:0 !important;
+  padding:0 !important;
+  min-height:0 !important;
+  background:transparent !important;
+}
+.updated-prompt-diff span:not(.upd-line){color:#536b75 !important}
+.updated-prompt-diff .upd-line{color:#5f96aa !important}
+
+/* Same pale-blue section bar used on the PROMPT page */
+.updated-prompt-diff .modal-prompt-rule{
+  display:flex !important;
+  align-items:center !important;
+  width:100% !important;
+  height:29px !important;
+  margin:13px 0 9px !important;
+  padding:0 16px !important;
+  box-sizing:border-box !important;
+  border-radius:999px !important;
+  background:#e2f0f5 !important;
+  color:#5f8fa1 !important;
+  font-size:10px !important;
+  line-height:1 !important;
+  font-weight:600 !important;
+  letter-spacing:.04em !important;
+}
+/* No artificial bold headings inside the prompt body */
+.updated-prompt-diff .modal-section-heading,
+.updated-prompt-diff .modal-anchor{
+  font-size:16px !important;
+  line-height:1.55 !important;
+  font-weight:400 !important;
+}
+
+
+/* =========================================================
+   TYPOGRAPHY RESET — PROMPT + VIEW PROMPT
+   Rule: headings = bold / prompt data = regular
+   ========================================================= */
+
+/* MAIN PROMPT PAGE — section bars/headings */
+#promptPage3Hybrid .prompt-rule,
+#promptPage3Hybrid .p3-tab strong,
+#promptPage3Hybrid .p3-tab .p3-en,
+#promptPage3Hybrid .p3-kicker{
+  font-weight:600 !important;
+}
+
+/* MAIN PROMPT PAGE — actual prompt data */
+#promptPage3Hybrid .prompt-content,
+#promptPage3Hybrid .prompt-content *,
+#promptPage3Hybrid .p3-content-area,
+#promptPage3Hybrid .p3-content-area p,
+#promptPage3Hybrid .p3-content-area li{
+  font-weight:400 !important;
+}
+
+/* Restore section bars after the broad body reset */
+#promptPage3Hybrid .prompt-rule{
+  font-weight:600 !important;
+}
+
+/* Reading anchors inside prompt are labels, so bold */
+#promptPage3Hybrid .prompt-content .prompt-anchor,
+#promptPage3Hybrid .p3-content-area .prompt-anchor{
+  font-weight:600 !important;
+}
+
+/* VIEW PROMPT — all data regular by default */
+.updated-prompt-full,
+.updated-prompt-diff span,
+.updated-prompt-diff span:not(.upd-line),
+.updated-prompt-diff .upd-line{
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif !important;
+  font-size:16px !important;
+  line-height:1.55 !important;
+  font-weight:400 !important;
+}
+
+/* Updated text differs by color ONLY */
+.updated-prompt-diff .upd-line{
+  color:#5f96aa !important;
+  font-weight:400 !important;
+  background:transparent !important;
+}
+
+/* VIEW PROMPT section bars = headings */
+.updated-prompt-diff .modal-prompt-rule{
+  font-size:10px !important;
+  line-height:1 !important;
+  font-weight:600 !important;
+  color:#5f8fa1 !important;
+  background:#e2f0f5 !important;
+}
+
+/* VIEW PROMPT reading labels = headings */
+.updated-prompt-diff .view-reading-heading{
+  font-weight:600 !important;
+  color:#536b75 !important;
+}
+
+
+/* ===== FINAL PROMPT TYPOGRAPHY RULE =====
+   heading = bold / data = regular / editable values = light blue
+*/
+#promptPage3Hybrid .prompt-content,
+#promptPage3Hybrid .prompt-content *,
+#promptPage3Hybrid .p3-content-area,
+#promptPage3Hybrid .p3-content-area *{
+  font-weight:400 !important;
+}
+#promptPage3Hybrid .prompt-rule,
+#promptPage3Hybrid .prompt-anchor{
+  font-weight:600 !important;
+}
+#promptPage3Hybrid .prompt-editable{
+  color:#6fa8bd !important;
+  font-weight:400 !important;
+}
+
+/* VIEW PROMPT follows the exact same rule */
+.updated-prompt-diff span,
+.updated-prompt-diff span:not(.upd-line),
+.updated-prompt-diff .upd-line{
+  font-weight:400 !important;
+}
+.updated-prompt-diff .modal-prompt-rule,
+.updated-prompt-diff .view-reading-heading{
+  font-weight:600 !important;
+}
+.updated-prompt-diff .upd-line{
+  color:#6fa8bd !important;
+  background:transparent !important;
+}
+
+
+/* ===== UPDATED PROMPT · parameter color only ===== */
+.updated-prompt-diff .upd-line,
+.updated-prompt-diff span,
+.updated-prompt-diff span:not(.upd-line){
+  color:#536b75 !important;
+  font-weight:400 !important;
+  background:transparent !important;
+}
+.updated-prompt-diff .updated-editable{
+  color:#6fa8bd !important;
+  font-weight:400 !important;
+}
+
+/* ROLE / INSTRUCTION / CONTEXT / CONSTRAINT / FORMAT = small outlined pills */
+.updated-prompt-diff .modal-prompt-rule{
+  display:inline-flex !important;
+  width:auto !important;
+  height:30px !important;
+  min-width:0 !important;
+  align-items:center !important;
+  justify-content:center !important;
+  margin:12px 0 7px !important;
+  padding:0 13px !important;
+  border:1px solid #c8dfe8 !important;
+  border-radius:999px !important;
+  background:#fff !important;
+  color:#58727d !important;
+  font-size:11px !important;
+  line-height:1 !important;
+  font-weight:600 !important;
+  letter-spacing:.03em !important;
+  box-sizing:border-box !important;
+}
+
+
+/* =========================================================
+   VIEW PROMPT — use the same visual system as PAGE PROMPT
+   ========================================================= */
+.updated-prompt-dialog{
+  width:min(1240px,92vw) !important;
+  height:min(760px,88vh) !important;
+}
+.updated-prompt-full{
+  padding:24px 32px 30px !important;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif !important;
+  font-size:16px !important;
+  line-height:1.55 !important;
+  font-weight:400 !important;
+  color:#536b75 !important;
+  white-space:normal !important;
+}
+
+/* Each source line behaves like a normal prompt line */
+.updated-prompt-diff > span{
+  display:block !important;
+  width:auto !important;
+  min-height:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  font:inherit !important;
+  line-height:1.55 !important;
+  color:#536b75 !important;
+  background:transparent !important;
+}
+
+/* CRITICAL: editable values are inline, never block */
+.updated-prompt-diff .updated-editable{
+  display:inline !important;
+  width:auto !important;
+  margin:0 !important;
+  padding:0 !important;
+  color:#6fa8bd !important;
+  background:transparent !important;
+  font:inherit !important;
+  font-weight:400 !important;
+}
+
+/* Reading headings follow the main PROMPT page hierarchy */
+.updated-prompt-diff .view-reading-heading{
+  display:block !important;
+  margin-top:10px !important;
+  font-weight:600 !important;
+  color:#536b75 !important;
+}
+
+/* ROLE / INSTRUCTION / ... : clean reference-style pill */
+.updated-prompt-diff .modal-prompt-rule{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:auto !important;
+  height:34px !important;
+  margin:14px 0 9px !important;
+  padding:0 14px !important;
+  border:1px solid #c7dfe8 !important;
+  border-radius:999px !important;
+  background:#fff !important;
+  color:#58727d !important;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif !important;
+  font-size:11px !important;
+  line-height:1 !important;
+  font-weight:600 !important;
+  letter-spacing:.02em !important;
+  box-sizing:border-box !important;
+}
+
+/* Header uses the same restrained hierarchy */
+.updated-prompt-top{
+  background:#fff !important;
+  border-bottom:1px solid #d7e5ea !important;
+}
+.updated-prompt-top span{
+  color:#5f96aa !important;
+  font-size:10px !important;
+  font-weight:600 !important;
+}
+.updated-prompt-top strong{
+  color:#26383f !important;
+  font-size:16px !important;
+  font-weight:600 !important;
+}
+
+
+/* =========================================================
+   CLEAN VIEW PROMPT — isolated from all legacy modal CSS
+   Mirrors the main PROMPT page hierarchy.
+   ========================================================= */
+.vp-modal{position:fixed;inset:0;z-index:12000;display:none;align-items:center;justify-content:center}
+.vp-modal.open{display:flex}
+.vp-backdrop{position:absolute;inset:0;background:rgba(35,48,54,.32);backdrop-filter:blur(3px)}
+.vp-dialog{
+  position:relative;width:min(1240px,92vw);height:min(760px,88vh);
+  display:flex;flex-direction:column;background:#fff;border:1px solid #d4e4ea;
+  border-radius:20px;box-shadow:0 24px 70px rgba(40,62,72,.18);overflow:hidden
+}
+.vp-top{
+  flex:0 0 56px;padding:0 24px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid #d7e5ea;background:#fff;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif
+}
+.vp-title{display:flex;align-items:baseline;gap:12px}
+.vp-title span{font-size:10px;font-weight:600;letter-spacing:.14em;color:#5f96aa}
+.vp-title strong{font-size:16px;font-weight:600;color:#26383f}
+.vp-close{width:30px;height:30px;border:0;border-radius:50%;background:transparent;color:#5f96aa;font-size:20px;cursor:pointer}
+.vp-body{
+  flex:1;overflow:auto;padding:22px 32px 30px;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:16px;line-height:1.55;font-weight:400;color:#536b75
+}
+.vp-section{margin:0 0 12px}
+.vp-chip{
+  display:inline-flex;align-items:center;justify-content:center;
+  height:32px;margin:0 0 8px;padding:0 14px;
+  border:1px solid #c7dfe8;border-radius:999px;background:#fff;
+  color:#58727d;font-size:11px;line-height:1;font-weight:600;letter-spacing:.02em
+}
+.vp-line{margin:0;padding:0;font-size:16px;line-height:1.55;font-weight:400;color:#536b75}
+.vp-heading{margin-top:7px;font-weight:600;color:#536b75}
+.vp-edit{display:inline;color:#6fa8bd;font:inherit;font-weight:400}
+
+
+/* =========================================================
+   PROMPT COMPONENT POPUP
+   VIEW ALL stays on the main PROMPT page.
+   ROLE / INSTRUCTION / CONTEXT / CONSTRAINT / FORMAT open here.
+   ========================================================= */
+#promptPage3Hybrid .p3-focus-viewport{display:none !important}
+#promptPage3Hybrid.focus-mode .p3-overview{display:block !important}
+#promptPage3Hybrid.focus-mode .p3-focus-viewport{display:none !important}
+#promptPage3Hybrid .p3-overview{display:block !important}
+
+.prompt-part-modal{
+  position:fixed;inset:0;z-index:11750;display:none;
+  align-items:center;justify-content:center;
+}
+.prompt-part-modal.open{display:flex}
+.prompt-part-backdrop{
+  position:absolute;inset:0;background:rgba(40,58,66,.34);backdrop-filter:blur(6px);
+}
+.prompt-part-dialog{
+  position:relative;z-index:1;
+  width:min(1180px,90vw);max-height:min(720px,86vh);
+  display:flex;flex-direction:column;
+  background:#fff;border:1px solid #d7e5ea;border-radius:20px;
+  box-shadow:0 26px 76px rgba(40,61,70,.20);overflow:hidden;
+}
+.prompt-part-top{
+  flex:0 0 56px;padding:0 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid #d7e5ea;background:#fff;
+}
+.prompt-part-title{
+  display:flex;align-items:baseline;gap:12px;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+}
+.prompt-part-title span{
+  font-size:10px;font-weight:600;letter-spacing:.12em;color:#5f96aa;
+}
+.prompt-part-title strong{
+  font-size:16px;font-weight:600;color:#26383f;
+}
+.prompt-part-close{
+  width:30px;height:30px;border:0;background:transparent;
+  color:#5f96aa;font-size:20px;cursor:pointer;
+}
+.prompt-part-body{
+  overflow:auto;padding:24px 32px 30px;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:16px;line-height:1.55;font-weight:400;color:#536b75;
+}
+.prompt-part-body .prompt-rule{
+  height:29px;margin:0 0 12px;padding:0 16px;
+  display:flex;align-items:center;
+  border-radius:999px;background:#e2f0f5;color:#5f8fa1;
+  font-size:10px;line-height:1;font-weight:600;letter-spacing:.04em;
+}
+.prompt-part-body p{margin:0;font-size:16px;line-height:1.55;font-weight:400;color:#536b75}
+.prompt-part-body .focus-source-heading{
+  margin:8px 0 2px;font-size:16px;line-height:1.55;font-weight:600;color:#536b75;
+}
+.prompt-part-body .focus-paragraph,
+.prompt-part-body .p3-list-line{
+  font-size:16px;line-height:1.55;font-weight:400;color:#536b75;
+}
+.prompt-part-body .prompt-editable{
+  display:inline !important;color:#6fa8bd !important;font-weight:400 !important;
+}
+
+/* ADD TO PROMPT — keep the card corners visibly rounded */
+#extendSlide .extend-add-card{
+  border-radius:17px !important;
+  overflow:hidden !important;
+}
+#extendSlide .extend-add-top{
+  border-radius:16px 16px 0 0 !important;
+}
+
+
+/* ===== PROMPT PART POPUPS · same box size + same typography as VIEW ALL ===== */
+
+/* All five popups use one identical dialog size */
+.prompt-part-dialog{
+  width:min(1240px,92vw) !important;
+  height:min(680px,80vh) !important;
+  max-height:none !important;
+}
+
+/* Header stays identical regardless of ROLE / INSTRUCTION / CONTEXT / CONSTRAINT / FORMAT */
+.prompt-part-top{
+  flex:0 0 56px !important;
+  padding:0 24px !important;
+}
+
+/* Popup content uses the VIEW ALL typography rules */
+.prompt-part-body{
+  flex:1 !important;
+  overflow:auto !important;
+  padding:24px 32px 30px !important;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif !important;
+  font-size:16px !important;
+  line-height:1.55 !important;
+  font-weight:400 !important;
+  color:#536b75 !important;
+}
+
+/* Reset copied VIEW ALL content so popup doesn't inherit old focus styling */
+.prompt-part-body .prompt-content,
+.prompt-part-body .prompt-content *,
+.prompt-part-body p,
+.prompt-part-body li,
+.prompt-part-body .focus-paragraph,
+.prompt-part-body .p3-list-line{
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif !important;
+  font-size:16px !important;
+  line-height:1.55 !important;
+  font-weight:400 !important;
+  color:#536b75 !important;
+}
+
+/* Section bar = exactly the same hierarchy as VIEW ALL */
+.prompt-part-body .prompt-rule{
+  display:flex !important;
+  align-items:center !important;
+  width:100% !important;
+  height:29px !important;
+  margin:0 0 12px !important;
+  padding:0 16px !important;
+  box-sizing:border-box !important;
+  border-radius:999px !important;
+  background:#e2f0f5 !important;
+  color:#5f8fa1 !important;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif !important;
+  font-size:10px !important;
+  line-height:1 !important;
+  font-weight:600 !important;
+  letter-spacing:.04em !important;
+}
+
+/* VIEW ALL reading headings */
+.prompt-part-body .focus-source-heading,
+.prompt-part-body .prompt-anchor{
+  font-size:16px !important;
+  line-height:1.55 !important;
+  font-weight:600 !important;
+  color:#536b75 !important;
+}
+
+/* Editable values remain the same light blue as VIEW ALL */
+.prompt-part-body .prompt-editable{
+  display:inline !important;
+  font:inherit !important;
+  font-weight:400 !important;
+  color:#6fa8bd !important;
+}
+
+
+/* ===== PROMPT POPUPS · match VIEW ALL paragraph spacing + indentation ===== */
+.prompt-part-body .prompt-content{
+  padding:0 !important;
+  margin:0 !important;
+}
+.prompt-part-body .focus-source-heading,
+.prompt-part-body .prompt-anchor{
+  display:block !important;
+  margin:0 0 2px !important;
+  padding:0 !important;
+  font-size:16px !important;
+  line-height:1.55 !important;
+  font-weight:600 !important;
+}
+.prompt-part-body .focus-paragraph{
+  margin:0 0 6px !important;
+  padding:0 !important;
+}
+.prompt-part-body .p3-list-line{
+  display:block !important;
+  margin:0 0 4px !important;
+  padding-left:14px !important;
+  text-indent:-14px !important;
+}
+.prompt-part-body .p3-list-line.sub{
+  padding-left:30px !important;
+  text-indent:-14px !important;
+}
+.prompt-part-body p{
+  margin-top:0 !important;
+}
+.prompt-part-body .prompt-rule + *{
+  margin-top:0 !important;
+}
+
+
+
+/* ===== POPUP CONTENT = exact VIEW ALL clone ===== */
+.prompt-part-body{
+  padding:24px 32px 30px !important;
+}
+.prompt-part-body .prompt-content{
+  margin:0 !important;
+  padding:0 !important;
+  font-family:inherit !important;
+}
+.prompt-part-body .prompt-content > *{
+  max-width:none !important;
+}
+.prompt-part-body .prompt-content p,
+.prompt-part-body .prompt-content .focus-paragraph,
+.prompt-part-body .prompt-content .p3-list-line{
+  margin-top:0 !important;
+}
+/* Do not split number markers from their sentence */
+.prompt-part-body .p3-list-line{
+  display:block !important;
+  white-space:normal !important;
+}
+/* Keep editable parameters exactly as on VIEW ALL */
+.prompt-part-body .prompt-editable{
+  display:inline !important;
+}
+
+
+/* ===== PROMPT POPUP · exact VIEW ALL paragraph/list layout ===== */
+.prompt-part-body{
+  --p3-number-col:24px;
+  --p3-number-gap:6px;
+  --p3-body-inset:16px;
+}
+.prompt-part-body .prompt-content{
+  width:100% !important;
+  padding:0 var(--p3-body-inset) !important;
+  box-sizing:border-box !important;
+  background:transparent !important;
+  border:0 !important;
+}
+.prompt-part-body .prompt-content > p{
+  margin:0 !important;
+  padding:0 !important;
+}
+.prompt-part-body .prompt-content,
+.prompt-part-body .prompt-content p,
+.prompt-part-body .prompt-content span,
+.prompt-part-body .prompt-content div{
+  font-size:16px !important;
+  line-height:1.55 !important;
+  font-weight:400;
+  color:#536b75;
+}
+
+/* Normal plain paragraph lines */
+.prompt-part-body .p3-list-plain{
+  display:block !important;
+  margin:0 0 4px !important;
+  padding:0 !important;
+}
+
+/* Reading headings: วัตถุประสงค์ / ข้อมูลต้นทาง / กรุณาส่งผลลัพธ์ดังนี้ */
+.prompt-part-body .p3-source-heading{
+  display:block !important;
+  margin:14px 0 5px !important;
+  padding:0 !important;
+  font-size:17px !important;
+  line-height:1.45 !important;
+  font-weight:700 !important;
+}
+.prompt-part-body .p3-source-heading:first-child{
+  margin-top:0 !important;
+}
+
+/* Number + sentence stay together, with the same indent as VIEW ALL */
+.prompt-part-body .p3-list-line{
+  display:grid !important;
+  grid-template-columns:var(--p3-number-col) minmax(0,1fr) !important;
+  column-gap:var(--p3-number-gap) !important;
+  align-items:start !important;
+  margin:3px 0 !important;
+  padding:0 !important;
+  text-indent:0 !important;
+}
+.prompt-part-body .p3-list-no{
+  display:block !important;
+  text-align:right !important;
+  white-space:nowrap !important;
+  font-variant-numeric:tabular-nums;
+}
+.prompt-part-body .p3-list-text{
+  display:block !important;
+  min-width:0 !important;
+}
+
+/* Sub-bullets align under the sentence text, not under the number */
+.prompt-part-body .p3-list-sub{
+  display:grid !important;
+  grid-template-columns:var(--p3-number-col) minmax(0,1fr) !important;
+  column-gap:var(--p3-number-gap) !important;
+  align-items:start !important;
+  margin:3px 0 !important;
+  padding:0 !important;
+}
+.prompt-part-body .p3-list-sub .p3-list-text{
+  grid-column:2 !important;
+}
+
+/* Editable values retain VIEW ALL light blue */
+.prompt-part-body .prompt-editable{
+  display:inline !important;
+  color:#6fa8bd !important;
+  font:inherit !important;
+  font-weight:400 !important;
+}
+
+
+/* ===== SECTION KICKERS 01 / 02 / 03 — identical typography ===== */
+.idea-kicker,
+.p3-kicker,
+.extend-kicker,
+.extend-v3-kicker{
+  font-weight:600 !important;
+}
+
+
+/* ===== PROMPT POPUP BOTTOM NAV ===== */
+.prompt-part-nav{
+  flex:0 0 58px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+  padding:0 24px;
+  border-top:1px solid #d7e5ea;
+  background:#fff;
+}
+.prompt-part-nav-btn{
+  width:38px;height:38px;
+  display:grid;place-items:center;
+  border:1px solid #c7e0e9;
+  border-radius:999px;
+  background:#fff;
+  color:#5f96aa;
+  font:400 25px/1 Arial,sans-serif;
+  cursor:pointer;
+}
+.prompt-part-nav-btn:hover{background:#f3f9fb}
+.prompt-part-nav-btn:disabled{
+  opacity:.28;
+  cursor:default;
+  background:#fff;
+}
+.prompt-part-nav-status{
+  min-width:126px;
+  text-align:center;
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif;
+  font-size:10px;
+  line-height:1;
+  font-weight:600;
+  letter-spacing:.08em;
+  color:#7f969f;
+}
+
+
+/* ===== POPUP NAV CLICK FIX ===== */
+.prompt-part-dialog{z-index:2 !important;}
+.prompt-part-body{position:relative;z-index:2;}
+.prompt-part-nav{
+  position:relative !important;
+  z-index:5 !important;
+  pointer-events:auto !important;
+}
+.prompt-part-nav-btn{
+  position:relative !important;
+  z-index:6 !important;
+  pointer-events:auto !important;
+}
+
+
+.prompt-part-nav-btn.is-disabled{
+  opacity:.28;
+  cursor:default;
+}
+
+
+/* FINAL: 01 / 02 / 03 section labels use exactly the same typography */
+.idea-slide > .kicker,
+#promptPage3Hybrid > .kicker,
+#extendSlide .extend-eyebrow{
+  font-family:"Kanit","Leelawadee UI","Tahoma",sans-serif !important;
+  font-size:10px !important;
+  font-weight:500 !important;
+  line-height:1.2 !important;
+  letter-spacing:.16em !important;
+  color:#5f96aa !important;
+  text-transform:uppercase !important;
+}
+
+
+
+/* ===== EXTEND · 5 full-width rows ===== */
+#extendSlide .extend-add-body{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  grid-template-rows:repeat(5, 1fr) !important;
+  height:520px !important;
+}
+#extendSlide .extend-add-row,
+#extendSlide .extend-add-row:last-child,
+#extendSlide .extend-add-row:nth-child(7){
+  grid-column:1 !important;
+  width:100% !important;
+  height:auto !important;
+  min-height:0 !important;
+  padding:14px 18px !important;
+  display:grid !important;
+  grid-template-columns:42px minmax(0,1fr) !important;
+  gap:14px !important;
+  align-content:center !important;
+  border-right:0 !important;
+  border-bottom:1px solid #e7eef1 !important;
+  box-sizing:border-box !important;
+}
+#extendSlide .extend-add-row:last-child{
+  border-bottom:0 !important;
+}
+#extendSlide .extend-add-content strong{
+  margin:0 0 4px !important;
+}
+#extendSlide .extend-add-content p{
+  margin:0 !important;
+  line-height:1.55 !important;
+}
+
+</style>
+</head>
+<body>
+<main class="shell">
+  <header class="topbar">
+    <div class="brand">AI PROMPT <small>LIBRARY · 2026</small></div>
+    <nav class="nav">
+      <span class="active" data-go="0">home</span>
+      <span data-go="1">idea</span>
+      <span data-go="2">prompt</span>
+          <span data-go="3">extend</span>
+    </nav>
+    <div class="profile"><b> </b><br> </div>
+  </header>
+
+  <div class="stage-wrap">
+    <button class="arrow" id="prev" aria-label="Previous">‹</button>
+    <section class="stage">
+
+      <article class="slide active hero-slide">
+        <div class="hero-y2k-orbit orbit-a"></div>
+        <div class="hero-y2k-orbit orbit-b"></div>
+        <div class="hero-y2k-star star-a">✦</div>
+        <div class="hero-y2k-star star-b">✧</div>
+
+        <div class="hero-platform">AI Chat <span>×</span> RTB</div>
+
+        <div class="hero-main">
+          <div class="hero-eyebrow">PROMPT PRESENTATION · EXCEL AUTOMATION</div>
+          <h1 class="hero-title">
+            <span class="hero-script">AI Prompt</span>
+            <span class="hero-for">for</span>
+            <span class="hero-excel">EXCEL</span>
+            <span class="hero-automation">AUTOMATION</span>
+          </h1>
+
+          <div class="hero-copy">
+            <span class="hero-copy-line"></span>
+            <p>Prompt สำหรับสร้าง <b>VBA Macro</b><br>เพื่อจัดกลุ่มและแยกข้อมูลใน Excel</p>
+          </div>
+
+          <div class="hero-tags">
+            <span>EXCEL</span>
+            <i>×</i>
+            <span>VBA</span>
+            <i>×</i>
+            <span>AI</span>
+          </div>
+        </div>
+
+        <div class="hero-side-note">DESIGNED<br>FOR A CLEARER<br>WORKFLOW</div>
+      </article>
+
+      <article class="slide idea-slide before-after-slide">
+        <div class="kicker">01 · IDEA</div>
+        <div class="idea-heading">
+          <div>
+            <h2>การจัดกลุ่มและแยกข้อมูลใน Excel<br><span class="accent">ด้วย Prompt สำหรับสร้าง VBA Macro</span></h2>
+            <p>ตัวอย่างการประมวลผล Master Data และแยกข้อมูลออกเป็น Worksheet ตามเงื่อนไขที่กำหนด</p>
+          </div>
+          <div class="idea-note">BEFORE / AFTER</div>
+        </div>
+
+        <div class="ba-grid">
+          <figure class="ba-card">
+            <div class="ba-label"><b>BEFORE</b><span>Master Data</span></div>
+            <div class="ba-image">
+              <img src="https://s.imgz.io/2026/09/25/beforeb0e51a26d1284e3f.png" alt="Before - Master Data" referrerpolicy="no-referrer">
+            </div>
+            <figcaption>
+              <b>ข้อมูลก่อนการประมวลผลใน Master Data</b>
+              <span>File size · <strong>909 KB</strong></span>
+            </figcaption>
+          </figure>
+
+          <div class="ba-arrow" aria-hidden="true">→</div>
+
+          <figure class="ba-card">
+            <div class="ba-label"><b>AFTER</b><span>Grouped Worksheets</span></div>
+            <div class="ba-image">
+              <img src="https://s.imgz.io/2026/09/25/after3c4668fce19dc6e9.png" alt="After - Grouped Worksheets" referrerpolicy="no-referrer">
+            </div>
+            <figcaption>
+              <b>ข้อมูลหลังการประมวลผล แยกตามเงื่อนไขในแต่ละ Worksheet</b>
+              <span>File size · <strong>223 KB</strong></span>
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="file-size-summary result-summary" aria-label="Processing result">
+          <span>ผลลัพธ์หลังการประมวลผล</span>
+          <b>จัดกลุ่มและแยกข้อมูลตามเงื่อนไขที่กำหนด โดยขนาดไฟล์ลดลงจาก <strong>909 KB</strong> เหลือ <strong>223 KB</strong></b>
+        </div>
+      </article>
+
+      <article id="promptPage3Hybrid" class="slide anatomy-slide prompt-structure-slide">
+        <div class="kicker">02 · PROMPT STRUCTURE</div>
+        <div class="p3-title-row">
+          <h2>องค์ประกอบของ <span class="accent">Prompt</span></h2>
+          <button class="p3-view-all active" type="button">VIEW ALL</button>
+        </div>
+
+        <div class="p3-tabs" aria-label="Prompt components">
+          <button class="p3-tab" type="button" data-index="0"><b>01 ROLE</b><span>บทบาท</span></button><button class="p3-tab" type="button" data-index="1"><b>02 INSTRUCTION</b><span>คำสั่ง</span></button><button class="p3-tab" type="button" data-index="2"><b>03 CONTEXT</b><span>บริบท</span></button><button class="p3-tab" type="button" data-index="3"><b>04 CONSTRAINT</b><span>เงื่อนไข</span></button><button class="p3-tab" type="button" data-index="4"><b>05 FORMAT</b><span>ผลลัพธ์</span></button>
+        </div>
+
+        <div class="p3-content-area">
+          <div class="p3-overview">
+            <section class="p3-overview-row row-role" data-index="0"><div class="prompt-content">
+              <div class="prompt-rule">ROLE</div>
+              <p>คุณคือผู้เชี่ยวชาญด้าน Microsoft Excel และ VBA</p>
+            </div></section><section class="p3-overview-row row-instruction" data-index="1"><div class="prompt-content">
+              <div class="prompt-rule">INSTRUCTION</div>
+              <p>ช่วยเขียน VBA Macro สำหรับจัดกลุ่มและแยกข้อมูลจาก Worksheet ปัจจุบัน โดยมีเงื่อนไขดังนี้</p>
+            </div></section><section class="p3-overview-row row-context" data-index="2"><div class="prompt-content">
+              <div class="prompt-rule">CONTEXT</div>
+              <p>วัตถุประสงค์:
+ต้องการแยกข้อมูลออกเป็นหลาย Worksheet โดยอ้างอิงค่าจาก Column B
+ข้อมูลต้นทาง:
+1. แถวแรกเป็น Header และต้องคัดลอก Header ไปยังทุก Worksheet ที่สร้างใหม่
+2. ตรวจสอบข้อมูลตั้งแต่แถวที่ 2 จนถึงแถวสุดท้ายที่มีข้อมูล</p>
+            </div></section><section class="p3-overview-row row-constraint" data-index="3"><div class="prompt-content">
+              <div class="prompt-rule">CONSTRAINT</div>
+              <p>3. นับจำนวนแถวของแต่ละค่าที่ไม่ซ้ำกันใน Column B
+4. หากค่าใน Column B ค่าใดมีจำนวนตั้งแต่ 20 แถวขึ้นไป:
+   - ให้สร้าง Worksheet แยกสำหรับค่านั้น
+   - คัดลอกข้อมูลทั้งแถวของรายการที่มีค่า Column B ตรงกันไปยัง Worksheet ดังกล่าว
+5. หากค่าใน Column B ค่าใดมีจำนวนน้อยกว่า 20 แถว:
+   - ให้นำข้อมูลทั้งหมดไปรวมไว้ใน Worksheet ชื่อ "ETC"
+6. ต้องคัดลอกข้อมูลทุก Column ของแถวนั้น ไม่ใช่เฉพาะ Column B
+7. ห้ามแก้ไขหรือลบข้อมูลใน Worksheet ต้นฉบับ
+8. หากมี Worksheet ชื่อเดียวกันอยู่แล้ว ให้ลบ Worksheet เก่าแล้วสร้างใหม่ หรือเคลียร์ข้อมูลก่อนเขียนใหม่
+9. ชื่อ Worksheet ต้องไม่เกิน 31 ตัวอักษร และต้องตัดอักขระที่ Excel ไม่อนุญาต ได้แก่ \ / ? * [ ] :
+10. หาก Column B เป็นค่าว่าง ให้นำรายการนั้นไปรวมไว้ใน Worksheet "ETC"
+11. ปรับความกว้าง Column ในทุก Worksheet ใหม่ให้พอดีกับข้อมูลด้วย AutoFit
+12. ต้องรองรับข้อมูลจำนวนมากและทำงานอย่างมีประสิทธิภาพ โดยปิด ScreenUpdating และ Calculation ชั่วคราว
+13. เมื่อทำงานเสร็จ ให้เปิดการตั้งค่าทั้งหมดกลับคืน แม้เกิดข้อผิดพลาด
+14. แสดงข้อความสรุปเมื่อทำงานเสร็จว่า:
+   - สร้าง Worksheet ใหม่กี่ชีต
+   - มีข้อมูลรวมใน ETC กี่แถว
+   - ใช้เวลาประมวลผลกี่วินาที</p>
+            </div></section><section class="p3-overview-row row-format" data-index="4"><div class="prompt-content">
+              <div class="prompt-rule">FORMAT</div>
+              <p>กรุณาส่งผลลัพธ์ดังนี้:
+1. VBA Code ที่พร้อมนำไปวางใน Module และใช้งานได้ทันที
+2. ขั้นตอนติดตั้งและวิธีรันแบบละเอียดสำหรับผู้ที่ไม่มีความรู้ VBA
+3. อธิบายส่วนสำคัญของ Code
+4. ระบุข้อจำกัดและสิ่งที่ควรตรวจสอบก่อนใช้งาน
+5. ตรวจสอบให้แน่ใจว่า Code มี Error Handling และไม่มีการใช้ Select หรือ Activate โดยไม่จำเป็น</p>
+            </div></section>
+          </div>
+          <div class="p3-focus-viewport" aria-hidden="true">
+            <div class="p3-focus-track">
+              <section class="p3-focus-panel row-role" data-index="0"><div class="prompt-content">
+              <div class="prompt-rule">ROLE</div>
+              <p>คุณคือผู้เชี่ยวชาญด้าน Microsoft Excel และ VBA</p>
+            </div></section><section class="p3-focus-panel row-instruction" data-index="1"><div class="prompt-content">
+              <div class="prompt-rule">INSTRUCTION</div>
+              <p>ช่วยเขียน VBA Macro สำหรับจัดกลุ่มและแยกข้อมูลจาก Worksheet ปัจจุบัน โดยมีเงื่อนไขดังนี้</p>
+            </div></section><section class="p3-focus-panel row-context" data-index="2"><div class="prompt-content">
+              <div class="prompt-rule">CONTEXT</div>
+              <p>วัตถุประสงค์:
+ต้องการแยกข้อมูลออกเป็นหลาย Worksheet โดยอ้างอิงค่าจาก Column B
+ข้อมูลต้นทาง:
+1. แถวแรกเป็น Header และต้องคัดลอก Header ไปยังทุก Worksheet ที่สร้างใหม่
+2. ตรวจสอบข้อมูลตั้งแต่แถวที่ 2 จนถึงแถวสุดท้ายที่มีข้อมูล</p>
+            </div></section><section class="p3-focus-panel row-constraint" data-index="3"><div class="prompt-content">
+              <div class="prompt-rule">CONSTRAINT</div>
+              <p>3. นับจำนวนแถวของแต่ละค่าที่ไม่ซ้ำกันใน Column B
+4. หากค่าใน Column B ค่าใดมีจำนวนตั้งแต่ 20 แถวขึ้นไป:
+   - ให้สร้าง Worksheet แยกสำหรับค่านั้น
+   - คัดลอกข้อมูลทั้งแถวของรายการที่มีค่า Column B ตรงกันไปยัง Worksheet ดังกล่าว
+5. หากค่าใน Column B ค่าใดมีจำนวนน้อยกว่า 20 แถว:
+   - ให้นำข้อมูลทั้งหมดไปรวมไว้ใน Worksheet ชื่อ "ETC"
+6. ต้องคัดลอกข้อมูลทุก Column ของแถวนั้น ไม่ใช่เฉพาะ Column B
+7. ห้ามแก้ไขหรือลบข้อมูลใน Worksheet ต้นฉบับ
+8. หากมี Worksheet ชื่อเดียวกันอยู่แล้ว ให้ลบ Worksheet เก่าแล้วสร้างใหม่ หรือเคลียร์ข้อมูลก่อนเขียนใหม่
+9. ชื่อ Worksheet ต้องไม่เกิน 31 ตัวอักษร และต้องตัดอักขระที่ Excel ไม่อนุญาต ได้แก่ \ / ? * [ ] :
+10. หาก Column B เป็นค่าว่าง ให้นำรายการนั้นไปรวมไว้ใน Worksheet "ETC"
+11. ปรับความกว้าง Column ในทุก Worksheet ใหม่ให้พอดีกับข้อมูลด้วย AutoFit
+12. ต้องรองรับข้อมูลจำนวนมากและทำงานอย่างมีประสิทธิภาพ โดยปิด ScreenUpdating และ Calculation ชั่วคราว
+13. เมื่อทำงานเสร็จ ให้เปิดการตั้งค่าทั้งหมดกลับคืน แม้เกิดข้อผิดพลาด
+14. แสดงข้อความสรุปเมื่อทำงานเสร็จว่า:
+   - สร้าง Worksheet ใหม่กี่ชีต
+   - มีข้อมูลรวมใน ETC กี่แถว
+   - ใช้เวลาประมวลผลกี่วินาที</p>
+            </div></section><section class="p3-focus-panel row-format" data-index="4"><div class="prompt-content">
+              <div class="prompt-rule">FORMAT</div>
+              <p>กรุณาส่งผลลัพธ์ดังนี้:
+1. VBA Code ที่พร้อมนำไปวางใน Module และใช้งานได้ทันที
+2. ขั้นตอนติดตั้งและวิธีรันแบบละเอียดสำหรับผู้ที่ไม่มีความรู้ VBA
+3. อธิบายส่วนสำคัญของ Code
+4. ระบุข้อจำกัดและสิ่งที่ควรตรวจสอบก่อนใช้งาน
+5. ตรวจสอบให้แน่ใจว่า Code มี Error Handling และไม่มีการใช้ Select หรือ Activate โดยไม่จำเป็น</p>
+            </div></section>
+            </div>
+          </div>
+        </div>
+      </article>
+
+
+
+<article class="slide extend-slide" id="extendSlide">
+  <div class="extend-wrap extend-v3-wrap">
+    <div class="extend-eyebrow">03 · EXTEND</div>
+
+    <div class="extend-head extend-v3-head">
+      <div>
+        <div class="extend-script">Make it</div>
+        <h2>MORE<br><span>COMPLETE.</span></h2>
+      </div>
+      <div class="extend-head-right">
+        
+        <button class="extend-view-btn" id="openUpdatedPrompt" type="button">VIEW PROMPT</button>
+      </div>
+    </div>
+
+    <div class="extend-add-card">
+      <div class="extend-add-top"><span>ADD TO PROMPT</span><span>＋</span></div>
+      <div class="extend-add-body">
+  <div class="extend-add-row">
+    <div class="extend-add-no">01</div>
+    <div class="extend-add-content">
+      <strong>กำหนดขอบเขตและจัดเตรียมข้อมูลให้ชัดเจน</strong>
+      <p>ตรวจสอบข้อมูลในช่วง <em>A:L</em> กำหนดแถวว่างและแถวข้อมูล พร้อม Sort ข้อมูลแบบ A–Z โดยใช้ <em>Column A</em> เป็นหลัก</p>
+    </div>
+  </div>
+  <div class="extend-add-row">
+    <div class="extend-add-no">02</div>
+    <div class="extend-add-content">
+      <strong>ควบคุมการแก้ไขข้อมูลต้นฉบับ</strong>
+      <p>ห้ามลบหรือแก้ไขข้อมูลใน Worksheet ต้นฉบับ ยกเว้นการเปลี่ยนลำดับแถวจากการ Sort</p>
+    </div>
+  </div>
+  <div class="extend-add-row">
+    <div class="extend-add-no">03</div>
+    <div class="extend-add-content">
+      <strong>เพิ่มเงื่อนไขด้านประสิทธิภาพ</strong>
+      <p>รองรับข้อมูลจำนวนมาก ทำงานได้รวดเร็ว และใช้หน่วยความจำอย่างเหมาะสม โดยไม่ลดความครบถ้วนหรือความถูกต้องของข้อมูล</p>
+    </div>
+  </div>
+  <div class="extend-add-row">
+    <div class="extend-add-no">04</div>
+    <div class="extend-add-content">
+      <strong>กำหนดรูปแบบ Code และข้อความ</strong>
+      <p>ชื่อชุดคำสั่ง ฟังก์ชัน ตัวแปร และคำอธิบายใน Code เป็นภาษาอังกฤษ ส่วนข้อความหลังรันใช้ภาษาอังกฤษแบบง่ายและกระชับ</p>
+    </div>
+  </div>
+  <div class="extend-add-row">
+    <div class="extend-add-no">05</div>
+    <div class="extend-add-content">
+      <strong>เพิ่มการตรวจสอบและสรุปผลหลังประมวลผล</strong>
+      <p>ตรวจสอบต้นฉบับเทียบกับปลายทาง ทั้งจำนวนแถว จำนวนตัวอักษร และความครบถ้วน พร้อมแสดงผล Passed / Failed และรายละเอียดเมื่อพบความแตกต่าง</p>
+    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</article>
+
+
+
+
+    </section>
+    <button class="arrow" id="next" aria-label="Next">›</button>
+  </div>
+
+  <footer class="bottom">
+    <div class="y2k-page-indicator y2k-three" aria-label="Page indicator">
+      <span class="y2k-dot y2k-dot-left"></span>
+      <span class="y2k-line y2k-line-a"></span>
+      <span class="y2k-dot y2k-dot-mid"></span>
+      <span class="y2k-line y2k-line-b"></span>
+      <span class="y2k-dot y2k-dot-right"></span>
+    </div>
+  </footer>
+</main>
+
+<div class="image-modal" id="imageModal" aria-hidden="true">
+  <button class="image-modal-close" id="imageModalClose" aria-label="Close">×</button>
+  <div class="image-modal-inner" id="imageModalInner">
+    <img id="imageModalImg" alt="">
+  </div>
+  <div class="image-modal-hint">คลิกภาพอีกครั้งเพื่อแสดงขนาด 100% · คลิกพื้นที่ว่างหรือกด ESC เพื่อปิด</div>
+</div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+const nav=[...document.querySelectorAll('.nav span')];
+let index=0;
+
+function show(n){
+  if(n<0 || n>=slides.length) return;
+  slides[index].classList.remove('active');
+  index=n;
+  slides[index].classList.add('active');
+  document.getElementById('current').textContent=String(index+1).padStart(2,'0');
+  document.getElementById('bar').style.width=((index+1)/slides.length*100)+'%';
+  nav.forEach(x=>x.classList.remove('active'));
+  const map=[0,1,2,3];
+  if(nav[map[index]]) nav[map[index]].classList.add('active');
+}
+document.getElementById('next').onclick=()=>show(index+1);
+document.getElementById('prev').onclick=()=>show(index-1);
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ') show(index+1);
+  if(e.key==='ArrowLeft') show(index-1);
+});
+nav.forEach((n)=>n.onclick=()=>show(+n.dataset.go));
+
+
+
+// Clickable left-side Prompt categories
+const promptRows = [...document.querySelectorAll('.prompt-row')];
+promptRows.forEach(row=>{
+  const tag = row.querySelector('.prompt-tag');
+  tag.setAttribute('role','button');
+  tag.setAttribute('tabindex','0');
+
+  const activate = ()=>{
+    promptRows.forEach(r=>r.classList.remove('selected'));
+    row.classList.add('selected');
+    row.scrollIntoView({behavior:'smooth',block:'start'});
+  };
+
+  tag.addEventListener('click', activate);
+  tag.addEventListener('keydown', e=>{
+    if(e.key==='Enter' || e.key===' '){
+      e.preventDefault();
+      activate();
+    }
+  });
+});
+
+
+// Full-size viewer for Before / After screenshots
+const imageModal = document.getElementById('imageModal');
+const imageModalImg = document.getElementById('imageModalImg');
+const imageModalClose = document.getElementById('imageModalClose');
+const imageModalInner = document.getElementById('imageModalInner');
+
+document.querySelectorAll('.ba-image img').forEach(img=>{
+  img.title = 'คลิกเพื่อแสดงภาพขนาดจริง';
+  img.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    imageModalImg.classList.remove('actual-size');
+    imageModalImg.src = img.src;
+    imageModalImg.alt = img.alt;
+    imageModal.classList.add('open');
+    imageModal.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+
+    // Start centered; image itself is rendered at its natural pixel size.
+    requestAnimationFrame(()=>{
+      imageModalInner.scrollLeft = Math.max(0,(imageModalImg.offsetWidth-imageModalInner.clientWidth)/2);
+      imageModalInner.scrollTop = Math.max(0,(imageModalImg.offsetHeight-imageModalInner.clientHeight)/2);
+    });
+  });
+});
+
+function closeImageModal(){
+  imageModal.classList.remove('open');
+  imageModal.setAttribute('aria-hidden','true');
+  imageModalImg.src = '';
+  document.body.style.overflow = '';
+}
+imageModalClose.addEventListener('click', closeImageModal);
+imageModalImg.addEventListener('click', e=>{
+  e.stopPropagation();
+  imageModalImg.classList.toggle('actual-size');
+  if(imageModalImg.classList.contains('actual-size')){
+    requestAnimationFrame(()=>{
+      imageModalInner.scrollLeft = Math.max(0,(imageModalImg.offsetWidth-imageModalInner.clientWidth)/2);
+      imageModalInner.scrollTop = Math.max(0,(imageModalImg.offsetHeight-imageModalInner.clientHeight)/2);
+    });
+  }
+});
+imageModal.addEventListener('click', e=>{
+  if(e.target === imageModal || e.target === imageModalInner){
+    closeImageModal();
+  }
+});
+document.addEventListener('keydown', e=>{
+  if(e.key === 'Escape' && imageModal.classList.contains('open')){
+    closeImageModal();
+  }
+});
+
+
+/* PAGE 3 ONLY: overview + focus navigation */
+(function(){
+  const page=document.getElementById('promptPage3Hybrid');
+  if(!page) return;
+  const tabs=[...page.querySelectorAll('.p3-tab')];
+  const track=page.querySelector('.p3-focus-track');
+  const viewAll=page.querySelector('.p3-view-all');
+  const panels=[...page.querySelectorAll('.p3-focus-panel')];
+
+  function focusAt(i){
+    page.classList.add('focus-mode');
+    viewAll.classList.remove('active');
+    tabs.forEach((t,n)=>t.classList.toggle('active',n===i));
+    track.style.transform=`translateX(-${i*20}%)`;
+    panels[i].scrollTop=0;
+    const c=panels[i].querySelector('.prompt-content');
+    if(c) c.scrollTop=0;
+  }
+  function overview(){
+    page.classList.remove('focus-mode');
+    viewAll.classList.add('active');
+    tabs.forEach(t=>t.classList.remove('active'));
+    const ov=page.querySelector('.p3-overview');
+    if(ov) ov.scrollTop=0;
+  }
+  tabs.forEach((t,i)=>t.addEventListener('click',()=>focusAt(i)));
+  viewAll.addEventListener('click',overview);
+})();
+
+</script>
+
+<script>
+
+/* PAGE 3 · VIEW ALL — preserve wording, only format numbered lines into aligned columns */
+(function(){
+  const page = document.getElementById('promptPage3Hybrid');
+  if(!page) return;
+
+  function formatOverviewList(sectionSelector){
+    const p = page.querySelector('.p3-overview ' + sectionSelector + ' .prompt-content p');
+    if(!p || p.dataset.alignedList === '1') return;
+
+    const lines = p.textContent.split('\n');
+    const wrap = document.createElement('div');
+    wrap.className = 'p3-list';
+
+    lines.forEach(function(line){
+      const numbered = line.match(/^(\d+\.)(?:\s+)(.*)$/);
+      const sub = line.match(/^(\s*)(-\s+.*)$/);
+
+      if(numbered){
+        const row = document.createElement('div');
+        row.className = 'p3-list-line';
+
+        const no = document.createElement('span');
+        no.className = 'p3-list-no';
+        no.textContent = numbered[1];
+
+        const txt = document.createElement('span');
+        txt.className = 'p3-list-text';
+        txt.textContent = numbered[2];
+
+        row.append(no, txt);
+        wrap.appendChild(row);
+      } else if(sub){
+        const row = document.createElement('div');
+        row.className = 'p3-list-sub';
+
+        const blank = document.createElement('span');
+        blank.className = 'p3-list-no';
+        blank.textContent = '';
+
+        const txt = document.createElement('span');
+        txt.className = 'p3-list-text';
+        txt.textContent = sub[2];
+
+        row.append(blank, txt);
+        wrap.appendChild(row);
+      } else {
+        const row = document.createElement('div');
+        row.className = 'p3-list-plain';
+        row.textContent = line;
+        wrap.appendChild(row);
+      }
+    });
+
+    p.dataset.alignedList = '1';
+    p.replaceChildren(wrap);
+  }
+
+  formatOverviewList('.row-context');
+  formatOverviewList('.row-constraint');
+  formatOverviewList('.row-format');
+})();
+
+</script>
+<script>
+
+(function(){
+  const page = document.getElementById('promptPage3Hybrid');
+  if(!page) return;
+  page.querySelectorAll('.p3-overview .p3-list-plain').forEach(function(el){
+    const t = el.textContent.trim();
+    if(t === 'วัตถุประสงค์:' || t === 'ข้อมูลต้นทาง:' || t === 'กรุณาส่งผลลัพธ์ดังนี้:'){
+      el.classList.add('p3-source-heading');
+    }
+  });
+})();
+
+</script>
+<script>
+
+/* PAGE 3 · focused-page paragraph rhythm, preserving visible wording exactly */
+(function(){
+  const page = document.getElementById('promptPage3Hybrid');
+  if(!page) return;
+
+  page.querySelectorAll('.p3-focus-panel .prompt-content p').forEach(function(p){
+    if(p.dataset.focusRhythm === '1') return;
+    const lines = p.textContent.split('\n');
+    const frag = document.createDocumentFragment();
+
+    lines.forEach(function(line, i){
+      const span = document.createElement('span');
+      const trimmed = line.trim();
+
+      if(trimmed === 'วัตถุประสงค์:' ||
+         trimmed === 'ข้อมูลต้นทาง:' ||
+         trimmed === 'กรุณาส่งผลลัพธ์ดังนี้:'){
+        span.className = 'focus-source-heading';
+      } else if(/^\d+\./.test(trimmed) || /^-\s/.test(trimmed)){
+        span.className = 'focus-list';
+      } else {
+        span.className = 'focus-paragraph';
+      }
+
+      span.textContent = line;
+      frag.appendChild(span);
+    });
+
+    p.replaceChildren(frag);
+    p.dataset.focusRhythm = '1';
+  });
+})();
+
+</script>
+<script>
+
+/* Focus-only list alignment. Visible prompt wording is preserved exactly. */
+(function(){
+  const page = document.getElementById('promptPage3Hybrid');
+  if(!page) return;
+
+  page.querySelectorAll('.p3-focus-panel .focus-list').forEach(function(el){
+    if(el.dataset.gridDone === '1') return;
+    const raw = el.textContent;
+    const trimmed = raw.trim();
+    const numbered = trimmed.match(/^(\d+\.)(?:\s+)(.*)$/);
+
+    if(numbered){
+      const no = document.createElement('span');
+      no.className = 'focus-list-no';
+      no.textContent = numbered[1];
+
+      const txt = document.createElement('span');
+      txt.className = 'focus-list-text';
+      txt.textContent = numbered[2];
+
+      el.replaceChildren(no, txt);
+    } else if(/^-\s/.test(trimmed)){
+      el.classList.remove('focus-list');
+      el.classList.add('focus-sub');
+
+      const txt = document.createElement('span');
+      txt.className = 'focus-sub-text';
+      txt.textContent = trimmed;
+      el.replaceChildren(txt);
+    }
+    el.dataset.gridDone = '1';
+  });
+})();
+
+</script>
+
+<script>
+(function(){
+  const slides = Array.from(document.querySelectorAll('.stage > .slide'));
+  const bottom = document.querySelector('footer.bottom');
+
+  function syncIndicator(){
+    if(!bottom) return;
+    const active = slides.findIndex(s => s.classList.contains('active'));
+    bottom.classList.remove('cover-state','idea-state','prompt-state');
+    if(active <= 0) bottom.classList.add('cover-state');
+    else if(active === 1) bottom.classList.add('idea-state');
+    else bottom.classList.add('prompt-state');
+  }
+
+  if(bottom && slides.length){
+    const slideObserver = new MutationObserver(syncIndicator);
+    slides.forEach(s => slideObserver.observe(s,{attributes:true,attributeFilter:['class']}));
+    syncIndicator();
+  }
+
+  const root = document.getElementById('promptPage3Hybrid');
+  if(!root) return;
+
+  function highlight(){
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while(walker.nextNode()) nodes.push(walker.currentNode);
+
+    const rx = /(Column B|20 แถวขึ้นไป|20 แถว|"ETC")/g;
+    nodes.forEach(node => {
+      if(!node.nodeValue || !node.nodeValue.trim()) return;
+      const p = node.parentElement;
+      if(!p || p.closest('.customizable-value,.p3-tab,.p3-view-all,.customize-key,.prompt-rule,.p3-focus-heading')) return;
+      const text = node.nodeValue;
+      rx.lastIndex = 0;
+      if(!rx.test(text)) return;
+      rx.lastIndex = 0;
+
+      const frag = document.createDocumentFragment();
+      let last = 0, m;
+      while((m = rx.exec(text))){
+        if(m.index > last) frag.appendChild(document.createTextNode(text.slice(last,m.index)));
+        const span = document.createElement('span');
+        span.className = 'customizable-value';
+        span.textContent = m[0];
+        frag.appendChild(span);
+        last = m.index + m[0].length;
+      }
+      if(last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+      node.parentNode.replaceChild(frag,node);
+    });
+  }
+
+  // Existing page-3 render runs first; highlight after it.
+  setTimeout(highlight,0);
+
+  // Re-highlight after clicking VIEW ALL / component tabs, without observing the whole document.
+  root.addEventListener('click', function(e){
+    if(e.target.closest('.p3-tab,.p3-view-all')) setTimeout(highlight,0);
+  });
+})();
+</script>
+
+
+<script>
+(function(){
+  const root = document.getElementById('promptPage3Hybrid');
+  if(!root) return;
+
+  function softenRepeatedColumnB(){
+    root.querySelectorAll('.p3-focus-panel').forEach(panel => {
+      const cols = Array.from(panel.querySelectorAll('.customizable-value'))
+        .filter(el => el.textContent.trim() === 'Column B');
+      cols.forEach((el,i) => el.classList.toggle('repeat-column', i > 0));
+    });
+  }
+
+  setTimeout(softenRepeatedColumnB,20);
+  root.addEventListener('click', function(e){
+    if(e.target.closest('.p3-tab,.p3-view-all')) setTimeout(softenRepeatedColumnB,20);
+  });
+})();
+</script>
+
+
+<script>
+(function(){
+  const slides = Array.from(document.querySelectorAll('.stage > .slide'));
+  const bottom = document.querySelector('footer.bottom');
+  if(!bottom) return;
+  function syncExtendIndicator(){
+    const active = slides.findIndex(s=>s.classList.contains('active'));
+    bottom.classList.remove('cover-state','idea-state','prompt-state','extend-state');
+    if(active <= 0) bottom.classList.add('cover-state');
+    else if(active === 1) bottom.classList.add('idea-state');
+    else if(active === 2) bottom.classList.add('prompt-state');
+    else bottom.classList.add('extend-state');
+  }
+  const obs = new MutationObserver(syncExtendIndicator);
+  slides.forEach(s=>obs.observe(s,{attributes:true,attributeFilter:['class']}));
+  syncExtendIndicator();
+})();
+</script>
+
+
+
+
+<div class="prompt-part-modal" id="promptPartModal" aria-hidden="true">
+  <div class="prompt-part-backdrop" data-close-prompt-part></div>
+  <section class="prompt-part-dialog" role="dialog" aria-modal="true" aria-label="Prompt component">
+    <header class="prompt-part-top">
+      <div class="prompt-part-title">
+        <span>02 · PROMPT STRUCTURE</span>
+        <strong id="promptPartTitle">PROMPT</strong>
+      </div>
+      <button class="prompt-part-close" type="button" data-close-prompt-part aria-label="Close">×</button>
+    </header>
+    <div class="prompt-part-body" id="promptPartBody"></div>
+      <div class="prompt-part-nav" aria-label="Prompt section navigation">
+        <button class="prompt-part-nav-btn prompt-part-prev" type="button" aria-label="Previous section">‹</button>
+        <div class="prompt-part-nav-status" aria-live="polite"></div>
+        <button class="prompt-part-nav-btn prompt-part-next" type="button" aria-label="Next section">›</button>
+      </div>
+  </section>
+</div>
+
+<div class="vp-modal" id="updatedPromptModal" aria-hidden="true">
+  <div class="vp-backdrop" data-close-updated></div>
+  <section class="vp-dialog" role="dialog" aria-modal="true" aria-label="Updated Prompt">
+    <header class="vp-top">
+      <div class="vp-title"><span>UPDATED VERSION</span></div>
+      <button type="button" class="vp-close" data-close-updated>×</button>
+    </header>
+    <div class="vp-body">
+      <section class="vp-section"><div class="vp-chip">ROLE</div><div class="vp-line">คุณคือผู้เชี่ยวชาญด้าน Microsoft Excel และ VBA</div></section><section class="vp-section"><div class="vp-chip">INSTRUCTION</div><div class="vp-line">ช่วยเขียน VBA Macro สำหรับจัดระเบียบและแยกข้อมูลจาก Worksheet ปัจจุบันออกเป็นหลาย Worksheet โดยอ้างอิงค่าจาก <span class="vp-edit">Column B</span> ตามเงื่อนไขต่อไปนี้</div></section><section class="vp-section"><div class="vp-chip">CONTEXT</div><div class="vp-line">1. แถวแรกเป็น Header และต้องคัดลอกไปยังทุก Worksheet ที่สร้างใหม่</div><div class="vp-line">2. ตรวจสอบข้อมูลตั้งแต่แถวที่ 2 จนถึงแถวสุดท้าย โดยพิจารณา <span class="vp-edit">Column A:L</span></div><div class="vp-line">   - หาก <span class="vp-edit">A:L</span> ว่างทั้งหมด ให้ข้ามแถวนั้น</div><div class="vp-line">   - หากมีข้อมูลอย่างน้อย 1 Column ในช่วง <span class="vp-edit">A:L</span> ให้ถือเป็นแถวข้อมูล แม้บาง Column จะว่าง</div></section><section class="vp-section"><div class="vp-chip">CONSTRAINT</div><div class="vp-line">3. Sort ข้อมูลทั้งแถวใน Worksheet ต้นฉบับแบบ A–Z โดยใช้ <span class="vp-edit">Column A</span> เป็นหลัก ไม่นำ Header มารวม และจัดแถวข้อมูลให้ต่อเนื่องโดยไม่มีแถวว่างตามเงื่อนไขข้างต้นคั่น</div><div class="vp-line">4. หลังจาก Sort ให้นับจำนวนแถวของแต่ละค่าที่ไม่ซ้ำกันใน <span class="vp-edit">Column B</span> แล้วแยกข้อมูลดังนี้:</div><div class="vp-line">   - ตั้งแต่ <span class="vp-edit">20 แถวขึ้นไป</span>: สร้าง Worksheet สำหรับค่านั้น</div><div class="vp-line">   - น้อยกว่า 20 แถว: รวมไว้ใน Worksheet ชื่อ <span class="vp-edit">&quot;ETC&quot;</span></div><div class="vp-line">   - <span class="vp-edit">Column B</span> ว่าง: รวมไว้ใน Worksheet <span class="vp-edit">&quot;ETC&quot;</span></div><div class="vp-line">   - คัดลอกข้อมูลทุก Column ของแต่ละแถวไปยัง Worksheet ปลายทาง</div><div class="vp-line">5. ห้ามลบหรือแก้ไขข้อมูลใน Worksheet ต้นฉบับ<br>ยกเว้นการเปลี่ยนลำดับแถวจากการ Sort</div><div class="vp-line">6. หากมี Worksheet ปลายทางชื่อเดียวกันอยู่แล้ว ให้ลบและสร้างใหม่ หรือเคลียร์ข้อมูลเดิม โดยต้องไม่กระทบ Worksheet ต้นฉบับ</div><div class="vp-line">7. ชื่อ Worksheet ต้องไม่เกิน 31 ตัวอักษร และต้องไม่มีอักขระ \ / ? * [ ] :</div><div class="vp-line">8. ปรับความกว้าง Column ของทุก Worksheet ที่สร้างใหม่ให้พอดีกับข้อมูล</div><div class="vp-line">9. Code ต้องรองรับข้อมูลจำนวนมาก ทำงานได้รวดเร็ว และใช้หน่วยความจำอย่างเหมาะสม โดยต้องไม่ลดความครบถ้วนหรือความถูกต้องของข้อมูล</div><div class="vp-line">10. เมื่อทำงานเสร็จหรือเกิดข้อผิดพลาด ต้องคืนค่าการตั้งค่า Excel ที่เปลี่ยนไว้กลับเป็นค่าเดิม</div><div class="vp-line">11. ชื่อชุดคำสั่ง ฟังก์ชัน ตัวแปร และคำอธิบายใน Code ให้เป็นภาษาอังกฤษ ส่วนข้อความที่แสดงหลังรันให้ใช้ภาษาอังกฤษแบบง่ายและกระชับ</div><div class="vp-line">12. หลังจากแยกข้อมูล ให้ตรวจสอบข้อมูลใน Worksheet ปลายทางจริงเทียบกับต้นฉบับ โดยตรวจสอบ:</div><div class="vp-line">   - จำนวนแถวข้อมูล โดยไม่นับ Header และแถวว่างตามข้อ 2</div><div class="vp-line">   - จำนวนตัวอักษร โดยใช้หลักการนับเดียวกันทั้งต้นฉบับและปลายทาง</div><div class="vp-line">   - ความครบถ้วนของข้อมูล เพื่อให้แน่ใจว่าไม่มีข้อมูลขาด เกิน หรือซ้ำ</div><div class="vp-line">   - การตรวจสอบต้องใช้หน่วยความจำอย่างเหมาะสม</div><div class="vp-line">13. เมื่อทำงานเสร็จ ให้แสดงข้อความสรุป:</div><div class="vp-line">   - จำนวน Worksheet ที่สร้าง</div><div class="vp-line">   - จำนวนแถวข้อมูลต้นฉบับและปลายทาง</div><div class="vp-line">   - จำนวนตัวอักษรของข้อมูลต้นฉบับและปลายทาง</div><div class="vp-line">   - ระยะเวลาที่ใช้เป็นวินาที</div><div class="vp-line">   - ผลการตรวจสอบเป็น &quot;Passed&quot; หรือ &quot;Failed&quot;</div><div class="vp-line">   - หากไม่ผ่าน ให้แสดงความแตกต่างที่พบ และระบุตำแหน่งของข้อมูลที่ไม่ตรงกันเท่าที่ตรวจสอบได้</div></section><section class="vp-section"><div class="vp-chip">FORMAT</div><div class="vp-line vp-heading">กรุณาส่งผลลัพธ์ดังนี้:</div><div class="vp-line">1. VBA Code ที่พร้อมนำไปวางใน Module และใช้งานได้ทันที</div><div class="vp-line">2. ขั้นตอนติดตั้งและวิธีรันสำหรับผู้ที่ไม่มีความรู้ VBA</div><div class="vp-line">3. อธิบายส่วนสำคัญของ Code</div><div class="vp-line">4. ระบุข้อจำกัดและสิ่งที่ควรตรวจสอบก่อนใช้งาน</div><div class="vp-line">5. Code ต้องมีการจัดการข้อผิดพลาด และไม่ใช้คำสั่งเลือกหรือเปิด Worksheet โดยไม่จำเป็น</div></section>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  const modal=document.getElementById('updatedPromptModal');
+  const open=document.getElementById('openUpdatedPrompt');
+  if(!modal || !open) return;
+  function show(){ modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); }
+  function hide(){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); }
+  open.addEventListener('click', show);
+  modal.querySelectorAll('[data-close-updated]').forEach(el=>el.addEventListener('click', hide));
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape' && modal.classList.contains('open')) hide(); });
+})();
+</script>
+
+
+<script>
+(function(){
+  const pre=document.querySelector('.updated-prompt-diff');
+  if(!pre) return;
+  const sectionExact=new Set([
+    'วัตถุประสงค์:',
+    'เงื่อนไข:',
+    'กรุณาส่งผลลัพธ์ดังนี้:'
+  ]);
+  const anchorStarts=[
+    'ต้องการแยกข้อมูลออกเป็นหลาย Worksheet',
+    'หลังจากแยกข้อมูล ให้ตรวจสอบข้อมูลใน Worksheet ปลายทางจริงเทียบกับต้นฉบับ โดยตรวจสอบ:',
+    'เมื่อทำงานเสร็จ ให้แสดงข้อความสรุป:'
+  ];
+  pre.querySelectorAll('span').forEach(el=>{
+    const t=(el.textContent||'').trim();
+    if(sectionExact.has(t)) el.classList.add('modal-section-heading');
+    if(anchorStarts.some(s=>t.startsWith(s))) el.classList.add('modal-anchor');
+  });
+})();
+</script>
+
+
+<script>
+(function(){
+  const pre=document.querySelector('.updated-prompt-diff');
+  if(!pre || pre.dataset.promptBarsDone) return;
+  pre.dataset.promptBarsDone='1';
+
+  /* Remove the previous artificial bold hierarchy. */
+  pre.querySelectorAll('.modal-section-heading,.modal-anchor').forEach(el=>{
+    el.classList.remove('modal-section-heading','modal-anchor');
+  });
+
+  const spans=Array.from(pre.querySelectorAll(':scope > span'));
+  function addRuleBefore(el,label){
+    if(!el) return;
+    const rule=document.createElement('span');
+    rule.className='modal-prompt-rule';
+    rule.textContent=label;
+    pre.insertBefore(rule,el);
+  }
+
+  const byText=(fn)=>spans.find(el=>fn((el.textContent||'').trim()));
+
+  addRuleBefore(spans[0], 'ROLE');
+  addRuleBefore(byText(t=>t.startsWith('ช่วยเขียน VBA Macro')), 'INSTRUCTION');
+  addRuleBefore(byText(t=>t==='เงื่อนไข:'), 'CONTEXT');
+  addRuleBefore(byText(t=>t.startsWith('3. Sort ข้อมูลทั้งแถว')), 'CONSTRAINT');
+  addRuleBefore(byText(t=>t==='กรุณาส่งผลลัพธ์ดังนี้:'), 'FORMAT');
+})();
+</script>
+
+
+<script>
+(function(){
+  const headingTexts = new Set([
+    'วัตถุประสงค์:',
+    'ข้อมูลต้นทาง:',
+    'เงื่อนไข:',
+    'กรุณาส่งผลลัพธ์ดังนี้:'
+  ]);
+
+  /* MAIN PROMPT */
+  document.querySelectorAll('#promptPage3Hybrid .prompt-content, #promptPage3Hybrid .p3-content-area').forEach(root=>{
+    const walker=document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const nodes=[];
+    while(walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(n=>{
+      const t=(n.nodeValue||'').trim();
+      if(!headingTexts.has(t)) return;
+      const p=n.parentElement;
+      if(p) p.classList.add('prompt-anchor');
+    });
+  });
+
+  /* VIEW PROMPT */
+  const pre=document.querySelector('.updated-prompt-diff');
+  if(pre){
+    pre.querySelectorAll(':scope > span').forEach(el=>{
+      const t=(el.textContent||'').trim();
+      if(headingTexts.has(t)) el.classList.add('view-reading-heading');
+    });
+  }
+})();
+</script>
+
+
+<script>
+(function(){
+  const editable = [
+    'Column B',
+    '20 แถวขึ้นไป',
+    '20 แถว',
+    '"ETC"',
+    'ETC'
+  ];
+
+  function markEditable(root){
+    if(!root) return;
+    const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+    const nodes=[];
+    while(walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node=>{
+      const text=node.nodeValue;
+      if(!editable.some(v=>text.includes(v))) return;
+      const frag=document.createDocumentFragment();
+      let rest=text;
+      while(rest){
+        let hit=null, idx=Infinity;
+        editable.forEach(v=>{
+          const i=rest.indexOf(v);
+          if(i>=0 && i<idx){idx=i;hit=v;}
+        });
+        if(!hit){frag.append(document.createTextNode(rest));break;}
+        if(idx) frag.append(document.createTextNode(rest.slice(0,idx)));
+        const s=document.createElement('span');
+        s.className='prompt-editable';
+        s.textContent=hit;
+        frag.append(s);
+        rest=rest.slice(idx+hit.length);
+      }
+      node.parentNode.replaceChild(frag,node);
+    });
+  }
+
+  function apply(){
+    document.querySelectorAll('#promptPage3Hybrid .prompt-content, #promptPage3Hybrid .p3-content-area')
+      .forEach(markEditable);
+  }
+  apply();
+  document.querySelectorAll('#promptPage3Hybrid .p3-tab,#promptPage3Hybrid .p3-view-all')
+    .forEach(el=>el.addEventListener('click',()=>setTimeout(apply,0)));
+})();
+</script>
+
+
+<script>
+(function(){
+  const pre=document.querySelector('.updated-prompt-diff');
+  if(!pre || pre.dataset.editableFixed==='1') return;
+  pre.dataset.editableFixed='1';
+
+  const values=[
+    '20 แถวขึ้นไป',
+    'Column B',
+    'Column A',
+    'A:L',
+    '"ETC"',
+    'ETC'
+  ];
+
+  function mark(root){
+    const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+    const nodes=[];
+    while(walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node=>{
+      if(node.parentElement && (
+        node.parentElement.classList.contains('modal-prompt-rule') ||
+        node.parentElement.classList.contains('updated-editable')
+      )) return;
+
+      const text=node.nodeValue||'';
+      if(!values.some(v=>text.includes(v))) return;
+
+      const frag=document.createDocumentFragment();
+      let rest=text;
+      while(rest){
+        let hit=null, idx=Infinity;
+        values.forEach(v=>{
+          const i=rest.indexOf(v);
+          if(i>=0 && i<idx){ idx=i; hit=v; }
+        });
+        if(!hit){ frag.append(document.createTextNode(rest)); break; }
+        if(idx>0) frag.append(document.createTextNode(rest.slice(0,idx)));
+        const s=document.createElement('span');
+        s.className='updated-editable';
+        s.textContent=hit;
+        frag.append(s);
+        rest=rest.slice(idx+hit.length);
+      }
+      node.parentNode.replaceChild(frag,node);
+    });
+  }
+  mark(pre);
+})();
+</script>
+
+
+<script>
+(function(){
+  const pre=document.querySelector('.updated-prompt-diff');
+  if(!pre) return;
+
+  const headings=new Set([
+    'วัตถุประสงค์:',
+    'ข้อมูลต้นทาง:',
+    'เงื่อนไข:',
+    'กรุณาส่งผลลัพธ์ดังนี้:'
+  ]);
+
+  Array.from(pre.children).forEach(el=>{
+    if(el.classList.contains('modal-prompt-rule')) return;
+    const t=(el.textContent||'').trim();
+    el.classList.toggle('view-reading-heading', headings.has(t));
+  });
+})();
+</script>
+
+
+<script>
+(function(){
+  const page=document.getElementById('promptPage3Hybrid');
+  const modal=document.getElementById('promptPartModal');
+  const body=document.getElementById('promptPartBody');
+  const title=document.getElementById('promptPartTitle');
+  if(!page || !modal || !body || !title) return;
+
+  const labels=['ROLE','INSTRUCTION','CONTEXT','CONSTRAINT','FORMAT'];
+  let currentPart=0;
+  const prevBtn=modal.querySelector('.prompt-part-prev');
+  const nextBtn=modal.querySelector('.prompt-part-next');
+  const navStatus=modal.querySelector('.prompt-part-nav-status');
+
+  function updatePartNav(){
+    if(navStatus) navStatus.textContent=(currentPart+1)+' / '+labels.length+'  ·  '+labels[currentPart];
+    if(prevBtn){
+      prevBtn.disabled=false;
+      prevBtn.setAttribute('aria-disabled', currentPart===0 ? 'true' : 'false');
+      prevBtn.classList.toggle('is-disabled', currentPart===0);
+    }
+    if(nextBtn){
+      nextBtn.disabled=false;
+      nextBtn.setAttribute('aria-disabled', currentPart===labels.length-1 ? 'true' : 'false');
+      nextBtn.classList.toggle('is-disabled', currentPart===labels.length-1);
+    }
+  }
+
+  function openPart(i){
+    const row=page.querySelector('.p3-overview-row[data-index="'+i+'"]');
+    const source=row ? row.querySelector('.prompt-content') : null;
+    if(!source) return;
+
+    /* Clone the already-rendered VIEW ALL content itself.
+       Do not parse/rebuild lines: that was what split 3. / 4. / 5. from their text. */
+    body.innerHTML = source.innerHTML;
+
+    /* Remove only the duplicated blue section bar because the popup header names the section. */
+    const rule=body.querySelector('.prompt-rule');
+    if(rule) rule.remove();
+
+    currentPart=i;
+    title.textContent=labels[i];
+    updatePartNav();
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden','false');
+    body.scrollTop=0;
+  }
+  function closePart(){
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+    page.classList.remove('focus-mode');
+    page.querySelectorAll('.p3-tab').forEach(t=>t.classList.remove('active'));
+    const va=page.querySelector('.p3-view-all');
+    if(va) va.classList.add('active');
+  }
+
+  page.querySelectorAll('.p3-tab').forEach((tab,i)=>{
+    tab.addEventListener('click',function(e){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      page.classList.remove('focus-mode');
+      page.querySelectorAll('.p3-tab').forEach((t,n)=>t.classList.toggle('active',n===i));
+      const va=page.querySelector('.p3-view-all');
+      if(va) va.classList.remove('active');
+      openPart(i);
+    },true);
+  });
+
+  function goPart(nextIndex){
+    nextIndex=Math.max(0,Math.min(labels.length-1,nextIndex));
+    page.querySelectorAll('.p3-tab').forEach((t,n)=>t.classList.toggle('active',n===nextIndex));
+    const va=page.querySelector('.p3-view-all');
+    if(va) va.classList.remove('active');
+    openPart(nextIndex);
+  }
+
+  if(prevBtn){
+    prevBtn.addEventListener('click',function(e){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      if(currentPart>0) goPart(currentPart-1);
+    }, true);
+  }
+  if(nextBtn){
+    nextBtn.addEventListener('click',function(e){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      if(currentPart<labels.length-1) goPart(currentPart+1);
+    }, true);
+  }
+
+  const viewAll=page.querySelector('.p3-view-all');
+  if(viewAll){
+    viewAll.addEventListener('click',function(){
+      closePart();
+    },true);
+  }
+
+  modal.querySelectorAll('[data-close-prompt-part]').forEach(el=>el.addEventListener('click',closePart));
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape' && modal.classList.contains('open')) closePart();
+  });
+})();
+</script>
+
+</body>
+</html>
